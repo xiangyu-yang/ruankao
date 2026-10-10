@@ -123,6 +123,17 @@ body.side-visible #side-backdrop{display:block}
 pre.plain{white-space:pre-wrap;word-break:break-all;font-size:.88em}
 mark.search-hit{background:var(--hit);color:inherit;border-radius:3px;padding:0 1px}
 .cdn-warn{margin:0 0 1.2em;padding:12px 16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted-strong);font-size:.9em;background:var(--quote-bg)}
+.score-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 20px;padding:11px 15px;border-radius:11px;font-size:13.5px;border:1px solid}
+.score-banner.pass{background:rgba(46,164,79,.10);border-color:rgba(46,164,79,.45)}
+.score-banner.fail{background:rgba(217,83,79,.10);border-color:rgba(217,83,79,.45)}
+.score-banner.pending{background:var(--accent-soft);border-color:var(--accent)}
+.score-banner .sb-icon{font-size:15px}
+.score-banner .sb-sep{color:var(--muted)}
+.score-banner .sb-note{color:var(--muted-strong);font-size:12px}
+.score-banner .tb-btn{margin-left:auto}
+td.score-cell{font-weight:700;text-align:center;white-space:nowrap}
+td.score-cell.ok{color:#2ea44f}
+td.score-cell.weak{color:#d9534f}
 .cdn-warn a{color:var(--accent);cursor:pointer}
 .loading{padding:80px 0;text-align:center;color:var(--muted);font-size:14px}
 
@@ -678,6 +689,7 @@ async function renderNormal(text){
   postProcessCommon();
   setupTasks();
   applyHighlights();
+  injectSelfScore(text);
   buildToc();
 }
 function refreshView(){
@@ -783,10 +795,18 @@ function parseAnswers(text){
       const rm = line.match(/^\|\s*(\d{1,2})\s*\|/); if(!rm) continue;
       const cells = line.split('|').slice(1,-1).map(s=>s.trim());
       const r = +rm[1]; if(r < 1 || r > 15) continue;
-      const bases = [0,15,30,45,60];
-      for(let c = 1; c < Math.min(cells.length, 6); c++){
-        const am = cells[c].match(/^([A-Da-d])$/);
-        if(am) map[r + bases[c-1]] = am[1].toUpperCase();
+      /* 行内除行首外还有纯数字格 → 4-pair 表格式（题号|答案|题号|答案…），只用相邻「题号+答案」对提取 */
+      const isPair = cells.slice(1).some(c=>/^\d{1,2}$/.test(c));
+      if(!isPair){
+        const bases = [0,15,30,45,60];
+        for(let c = 1; c < Math.min(cells.length, 6); c++){
+          const am = cells[c].match(/^([A-Da-d])$/);
+          if(am) map[r + bases[c-1]] = am[1].toUpperCase();
+        }
+      }
+      for(let c = 0; c < cells.length - 1; c++){
+        const dm = cells[c].match(/^(\d{1,2})$/), am = cells[c+1] && cells[c+1].match(/^([A-Da-d])$/);
+        if(dm && am){ const qn = +dm[1]; if(qn >= 1 && qn <= 75) map[qn] = am[1].toUpperCase(); }
       }
     }
   }
@@ -800,6 +820,99 @@ function findAnswerFile(){
   if(!cands.length) cands = state.files.filter(f=> f.dir === cur.dir && /答案/.test(f.name));
   if(cands.length > 1){ const p = cands.find(f=>/答案与解析/.test(f.name)); if(p) return p; }
   return cands[0] || null;
+}
+/* 当前为答案解析文件时，反查同目录的试题文件（练习记录载体） */
+function findQuizFile(){
+  const cur = state.files.find(x=>x.path===state.current);
+  if(!cur) return null;
+  const subj = (cur.name.match(/综合知识|案例分析|论文/) || [])[0];
+  let cands = state.files.filter(f=> f.dir === cur.dir && /试题/.test(f.name) && (!subj || f.name.includes(subj)));
+  if(cands.length > 1){ const p = cands.find(f=>/综合知识/.test(f.name)); if(p) return p; }
+  return cands[0] || null;
+}
+/* 解析题号范围字符串："1-10"、"37-58,69-75"、"72-75" → 题号数组 */
+function parseQRange(str){
+  const out = [];
+  for(const part of String(str||'').split(/[,，、]/)){
+    const t = part.trim();
+    const m = t.match(/^(\d{1,2})\s*[-–—~]\s*(\d{1,2})$/);
+    if(m){
+      const a = +m[1], b = +m[2];
+      if(a >= 1 && b >= a && b <= 75) for(let i = a; i <= b; i++) out.push(i);
+    }else if(/^\d{1,2}$/.test(t) && +t >= 1 && +t <= 75){
+      out.push(+t);
+    }
+  }
+  return out;
+}
+/* ===== 得分注入：打开答案解析文件时，把对应试题的练习成绩填入「你的得分/得分」列并加顶部横幅 ===== */
+function injectSelfScore(text){
+  const cur = state.files.find(x=>x.path===state.current);
+  if(!cur || !/答案/.test(cur.name)) return;
+  const quizFile = findQuizFile();
+  if(!quizFile) return;
+  const st = LS.get('quiz:'+quizFile.path, null);
+  const sc = LS.get('score:'+quizFile.path, null);
+  if(!st && !sc) return;
+  const {map: ansMap} = parseAnswers(text);
+  const keys = Object.keys(ansMap);
+  const total = sc ? sc.total : keys.length;
+  const answered = st ? Object.keys(st.sel).length : (sc ? sc.total : 0);
+  const submitted = (st && st.submitted) || !!sc;
+
+  /* 顶部得分横幅 */
+  const banner = document.createElement('div');
+  if(submitted){
+    const score = sc ? sc.score : (st && st.score != null ? st.score : 0);
+    const pct = total ? Math.round(score/total*100) : 0;
+    const pass = total && score >= Math.ceil(total*0.6);
+    banner.className = 'score-banner ' + (pass ? 'pass' : 'fail');
+    let when = '';
+    if(sc && sc.ts) when = new Date(sc.ts).toLocaleString('zh-CN', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    let dur = '';
+    if(sc && sc.elapsed) dur = Math.max(1, Math.round(sc.elapsed/60000)) + ' 分钟';
+    banner.innerHTML = '<span class="sb-icon">'+(pass ? '✔' : '✍')+'</span>'
+      + '<b>你本次得分：'+score+' / '+total+'</b>（'+pct+'%）'
+      + (dur ? '<span class="sb-sep">·</span>用时约 '+dur : '')
+      + (when ? '<span class="sb-sep">·</span>'+when : '')
+      + '<span class="sb-note">'+(pass ? '已过 60% 及格线' : '未达 60% 及格线，重点回读错题考点')+'</span>'
+      + '<button class="tb-btn" data-action="go-quiz">回试卷重看错题</button>';
+  }else{
+    banner.className = 'score-banner pending';
+    banner.innerHTML = '<b>✍ 练习进行中</b>：已作答 '+answered+' / '+(total || '—')+' 题，交卷判分后此处自动生成得分统计。';
+  }
+  const first = content.querySelector('h1,h2');
+  if(first && first.parentElement === content) first.after(banner);
+  else content.prepend(banner);
+
+  if(!submitted) return;
+
+  /* 自评表填充：找同时含「题号」与「得分」表头的表格 */
+  content.querySelectorAll('table').forEach(tb=>{
+    const head = tb.querySelector('tr');
+    if(!head) return;
+    const ths = [...head.children];
+    const qi = ths.findIndex(th=> /题号/.test(th.textContent));
+    const si = ths.findIndex(th=> /得分/.test(th.textContent));
+    if(qi < 0 || si < 0 || qi === si) return;
+    [...tb.querySelectorAll('tr')].slice(1).forEach(tr=>{
+      const tds = [...tr.children];
+      const qTd = tds[qi], sTd = tds[si];
+      if(!qTd || !sTd) return;
+      const range = parseQRange(qTd.textContent);
+      if(!range.length) return;
+      const dm = sTd.textContent.trim().match(/^[／/]\s*(\d{1,2})$/) || sTd.textContent.trim().match(/^(\d{1,2})\s*\/\s*(\d{1,2})$/);
+      const full = dm ? +dm[dm.length-1] : range.length;
+      if(!full) return;
+      let ok = 0;
+      for(const n of range){
+        if(ansMap[n] && st && st.sel[n] === ansMap[n]) ok++;
+      }
+      sTd.textContent = ok + ' / ' + full;
+      sTd.classList.add('score-cell');
+      sTd.classList.add(ok >= Math.ceil(full*0.6) ? 'ok' : 'weak');
+    });
+  });
 }
 function loadQuizStore(){
   const st = LS.get('quiz:'+state.current, null) || {sel:{}, locked:{}, submitted:false, mode:'exam', firstTs:0};
@@ -815,6 +928,9 @@ async function renderQuiz(text){
     const at = await getText(ansFile);
     if(at){ const p = parseAnswers(at); ansMap = p.map; ansMeta = p.meta; }
   }
+  /* 只保留实际渲染为可作答题目的答案键（Day15 等卷的英语题以引用文本呈现、不可作答，不计入判分） */
+  const renderedNums = new Set(q.segs.filter(s=>s.type==='q').map(s=>s.num));
+  for(const k of Object.keys(ansMap)){ if(!renderedNums.has(+k)) delete ansMap[k]; }
   q.ansMap = ansMap; q.ansMeta = ansMeta;
   q.ansFilePath = ansFile ? ansFile.path : null;
   q.store = loadQuizStore();
@@ -909,11 +1025,12 @@ function submitQuiz(){
   for(const k of keys) if(st.sel[k] === q.ansMap[k]) score++;
   st.score = score;
   LS.set('quiz:'+state.current, st);
-  LS.set('score:'+state.current, {score, total: keys.length, ts: Date.now()});
+  const elapsed = st.firstTs ? Math.max(0, Date.now() - st.firstTs) : 0;
+  LS.set('score:'+state.current, {score, total: keys.length, ts: Date.now(), elapsed});
   renderQuiz(state.textCache.get(state.current));
   buildTree();
   main.scrollTop = 0;
-  toast('本次得分：'+score+' / '+keys.length+(score >= Math.ceil(keys*0.6) ? '，继续保持！' : '，错题记得回读精讲'));
+  toast('本次得分：'+score+' / '+keys.length+(score >= Math.ceil(keys.length*0.6) ? '，继续保持！' : '，错题记得回读精讲'));
 }
 function redoQuiz(){
   if(!confirm('重做将清空本卷的作答记录与得分，确定？')) return;
@@ -1203,7 +1320,7 @@ function welcomeHTML(reconnect){
     + '<h1>Markdown 备考学习器</h1>'
     + '<p class="w-sub">载入 Exam 文件夹后即可使用以下能力，所有学习数据保存在本机浏览器。</p>'
     + '<div class="w-feats">'
-    + '<div class="w-feat"><b>练习模式 · 自动判分</b><span>打开综合知识试题自动进入：点选项作答、交卷判分、只看错题、一键复制错题摘要到错题本。</span></div>'
+    + '<div class="w-feat"><b>练习模式 · 自动判分</b><span>打开综合知识试题自动进入：点选项作答、交卷判分、只看错题、一键复制错题摘要到错题本；打开对应答案解析时，自动在顶部显示得分横幅，并把自评表的「你的得分」列填为按篇章统计的真实得分。</span></div>'
     + '<div class="w-feat"><b>考试计时器</b><span>按题型自动预设 150 / 90 / 120 分钟，到点响铃；平时限时训练用。</span></div>'
     + '<div class="w-feat"><b>划重点</b><span>划选正文文字三色标注，重点本中回看、备注、跳转、导出。</span></div>'
     + '<div class="w-feat"><b>全文搜索</b><span>跨全部 Day 文件搜考点，点击跳转并高亮。</span></div>'
@@ -1245,6 +1362,7 @@ const ACTIONS = {
   'q-redo'     : ()=> redoQuiz(),
   'q-copy'     : ()=> copyText(buildWrongSummary()).then(ok=>{ if(ok) toast('已复制，可粘贴到错题本.md'); }),
   'q-ans'      : ()=>{ if(state.quiz && state.quiz.ansFilePath) openFile(state.quiz.ansFilePath); },
+  'go-quiz'    : ()=>{ const qf = findQuizFile(); if(qf) openFile(qf.path); else toast('未找到对应试题文件'); },
   'q-wrong'    : e=>{
     const on = document.body.classList.toggle('onlywrong');
     e.target.textContent = on ? '显示全部' : '只看错题';

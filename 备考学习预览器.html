@@ -132,6 +132,15 @@ mark.search-hit{background:var(--hit);color:inherit;border-radius:3px;padding:0 
 .score-banner .sb-sep{color:var(--muted)}
 .score-banner .sb-note{color:var(--muted-strong);font-size:12px}
 .score-banner .tb-btn{margin-left:auto}
+.as-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px;padding:12px 14px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:11px;font-size:13.5px}
+.as-head .as-sep{color:var(--muted-strong)}
+.as-head .as-hint{color:var(--muted-strong);font-size:12px;flex-basis:100%}
+.as-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.as-block{display:flex;align-items:center;gap:4px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--quote-bg)}
+.as-n{min-width:26px;font-weight:700;font-size:12px;color:var(--muted-strong);text-align:center}
+.as-opt{flex:1;padding:5px 0;border:1px solid var(--border);border-radius:6px;background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted-strong)}
+.as-opt:hover{border-color:var(--accent);color:var(--accent)}
+.as-opt.sel{background:var(--accent);border-color:var(--accent);color:#fff}
 td.score-cell{font-weight:700;text-align:center;white-space:nowrap}
 td.score-cell.ok{color:#2ea44f}
 td.score-cell.weak{color:#d9534f}
@@ -937,6 +946,7 @@ function fpHash(s){
 }
 async function renderQuiz(text){
   const ok = await ensureMarked();
+  state.anssheet = false;
   const q = state.quiz;
   let ansMap = {}, ansMeta = {};
   const ansFile = findAnswerFile();
@@ -1008,6 +1018,7 @@ function quizBannerHTML(store, ansMap){
       + '<button class="tb-btn" data-action="q-wrong">只看错题</button>'
       + '<button class="tb-btn" data-action="q-copy">复制错题摘要</button>'
       + (q.ansFilePath ? '<button class="tb-btn" data-action="q-ans">查看解析</button>' : '')
+      + '<button class="tb-btn" data-action="q-anssheet">答题卡修改</button>'
       + '<button class="tb-btn" data-action="q-redo">重做</button>';
   }else{
     inner = '已答 <b id="q-progress">'+Object.keys(store.sel).length+'</b> / '+total
@@ -1015,6 +1026,7 @@ function quizBannerHTML(store, ansMap){
       + '<button class="tb-btn'+(store.mode==='exam'?' active':'')+'" data-action="q-mode" data-mode="exam">考试模式</button>'
       + '<button class="tb-btn'+(store.mode==='instant'?' active':'')+'" data-action="q-mode" data-mode="instant">即时判分</button>'
       + '</span>'
+      + '<button class="tb-btn" data-action="q-anssheet">答题卡录入</button>'
       + '<button class="tb-btn" data-action="q-timer">开始计时 '+(q.defaultMin||150)+' 分钟</button>'
       + '<button class="tb-btn" data-action="q-submit">交卷</button>';
   }
@@ -1043,9 +1055,9 @@ function handleQuizAnswer(opt){
   }
   const c = $('#q-progress'); if(c) c.textContent = Object.keys(st.sel).length;
 }
-function submitQuiz(){
+function submitQuiz(fromSheet){
   const q = state.quiz, st = q.store;
-  if(!st.submitted && !confirm('确定交卷？未作答的题目将计为错误。')) return;
+  if(!st.submitted && !fromSheet && !confirm('确定交卷？未作答的题目将计为错误。')) return;
   st.submitted = true;
   const keys = Object.keys(q.ansMap);
   let score = 0;
@@ -1066,6 +1078,45 @@ function redoQuiz(){
   renderQuiz(state.textCache.get(state.current));
   buildTree();
   main.scrollTop = 0;
+}
+/* ===== 答题卡快速录入：网格化补录纸质/线下作答，判分后与练习记录完全同权 ===== */
+function renderAnswerSheet(){
+  const q = state.quiz;
+  if(!q) return;
+  const st = q.store;
+  const total = q.segs.filter(s=>s.type==='q').length;
+  const parts = [];
+  parts.push('<div class="as-head"><b>答题卡快速录入</b>'
+    + '<span class="as-sep">已录 <b id="as-progress">'+Object.keys(st.sel).length+'</b> / '+total+'</span>'
+    + '<button class="tb-btn" data-action="as-submit">判分</button>'
+    + '<button class="tb-btn" data-action="as-back">返回试卷</button>'
+    + '<span class="as-hint">对照你的纸质作答或记忆，点击每题的选项字母（点击已选字母可取消）；全部录入后点「判分」，成绩与《答案与解析》的自评统计即刻生成。未录入的题按错误计。</span>'
+    + '</div>');
+  parts.push('<div class="as-grid">');
+  for(const seg of q.segs){
+    if(seg.type !== 'q') continue;
+    const n = seg.num;
+    const sel = st.sel[n] || '';
+    let btns = '';
+    for(const o of seg.opts){
+      btns += '<button type="button" class="as-opt'+(sel===o.k?' sel':'')+'" data-n="'+n+'" data-k="'+o.k+'">'+o.k+'</button>';
+    }
+    parts.push('<div class="as-block"><span class="as-n">'+n+'</span>'+btns+'</div>');
+  }
+  parts.push('</div>');
+  content.innerHTML = parts.join('');
+  state.anssheet = true;
+  main.scrollTop = 0;
+}
+function asSubmit(){
+  const q = state.quiz;
+  if(!q) return;
+  const total = q.segs.filter(s=>s.type==='q').length;
+  const answered = Object.keys(q.store.sel).length;
+  if(answered === 0){ toast('尚未录入任何题目'); return; }
+  if(answered < total && !confirm('还有 '+(total-answered)+' 题未录入（未录入按错误计），确定判分？')) return;
+  state.anssheet = false;
+  submitQuiz(true);
 }
 function buildWrongSummary(){
   const q = state.quiz, st = q.store;
@@ -1390,6 +1441,9 @@ const ACTIONS = {
   'q-copy'     : ()=> copyText(buildWrongSummary()).then(ok=>{ if(ok) toast('已复制，可粘贴到错题本.md'); }),
   'q-ans'      : ()=>{ if(state.quiz && state.quiz.ansFilePath) openFile(state.quiz.ansFilePath); },
   'go-quiz'    : ()=>{ const qf = findQuizFile(); if(qf) openFile(qf.path); else toast('未找到对应试题文件'); },
+  'q-anssheet' : ()=> renderAnswerSheet(),
+  'as-back'    : ()=>{ state.anssheet = false; renderQuiz(state.textCache.get(state.current)); main.scrollTop = 0; },
+  'as-submit'  : ()=> asSubmit(),
   'go-quiz-redo': ()=>{
     const qf = findQuizFile();
     if(!qf){ toast('未找到对应试题文件'); return; }
@@ -1465,6 +1519,17 @@ function init(){
 
   /* 正文统一点击分发：练习作答 → 动作按钮 */
   content.addEventListener('click', e=>{
+    const aso = e.target.closest('.as-opt');
+    if(aso){
+      const n = +aso.dataset.n, k = aso.dataset.k;
+      const st = state.quiz.store;
+      if(st.sel[n] === k){ delete st.sel[n]; }
+      else { st.sel[n] = k; if(!st.firstTs) st.firstTs = Date.now(); }
+      LS.set('quiz:'+state.current, st);
+      aso.parentElement.querySelectorAll('.as-opt').forEach(b=> b.classList.toggle('sel', st.sel[n] === b.dataset.k));
+      const c = $('#as-progress'); if(c) c.textContent = Object.keys(st.sel).length;
+      return;
+    }
     const opt = e.target.closest('.q-opt');
     if(opt){ handleQuizAnswer(opt); return; }
     const a = e.target.closest('[data-action]');

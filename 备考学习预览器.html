@@ -126,6 +126,7 @@ mark.search-hit{background:var(--hit);color:inherit;border-radius:3px;padding:0 
 .score-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 20px;padding:11px 15px;border-radius:11px;font-size:13.5px;border:1px solid}
 .score-banner.pass{background:rgba(46,164,79,.10);border-color:rgba(46,164,79,.45)}
 .score-banner.fail{background:rgba(217,83,79,.10);border-color:rgba(217,83,79,.45)}
+.score-banner.warn{background:rgba(240,165,0,.12);border-color:rgba(240,165,0,.5)}
 .score-banner.pending{background:var(--accent-soft);border-color:var(--accent)}
 .score-banner .sb-icon{font-size:15px}
 .score-banner .sb-sep{color:var(--muted)}
@@ -689,7 +690,7 @@ async function renderNormal(text){
   postProcessCommon();
   setupTasks();
   applyHighlights();
-  injectSelfScore(text);
+  await injectSelfScore(text);
   buildToc();
 }
 function refreshView(){
@@ -846,7 +847,7 @@ function parseQRange(str){
   return out;
 }
 /* ===== 得分注入：打开答案解析文件时，把对应试题的练习成绩填入「你的得分/得分」列并加顶部横幅 ===== */
-function injectSelfScore(text){
+async function injectSelfScore(text){
   const cur = state.files.find(x=>x.path===state.current);
   if(!cur || !/答案/.test(cur.name)) return;
   const quizFile = findQuizFile();
@@ -854,6 +855,9 @@ function injectSelfScore(text){
   const st = LS.get('quiz:'+quizFile.path, null);
   const sc = LS.get('score:'+quizFile.path, null);
   if(!st && !sc) return;
+  /* 试卷版本校验：作答记录须与当前试卷指纹一致，否则统计无意义（试卷曾于10.10均衡化洗牌） */
+  const quizText = await getText(quizFile);
+  const fpMatch = st && st.fp ? (quizText != null && st.fp === fpHash(quizText)) : false;
   const {map: ansMap} = parseAnswers(text);
   const keys = Object.keys(ansMap);
   const total = sc ? sc.total : keys.length;
@@ -862,7 +866,13 @@ function injectSelfScore(text){
 
   /* 顶部得分横幅 */
   const banner = document.createElement('div');
-  if(submitted){
+  if(submitted && !fpMatch){
+    banner.className = 'score-banner warn';
+    banner.innerHTML = '<span class="sb-icon">⚠</span>'
+      + '<b>作答记录来自旧版试卷</b>（试卷于 10 月 10 日晚均衡化洗牌，选项已重排，旧记录的选项位置与当前答案键错位）'
+      + '<span class="sb-note">下方自评表暂不填充，以免产生误导性统计——打开试卷点「重做」重新作答后，此处与自评表即按新版本精确统计。</span>'
+      + '<button class="tb-btn" data-action="go-quiz-redo">打开试卷重做</button>';
+  }else if(submitted){
     const score = sc ? sc.score : (st && st.score != null ? st.score : 0);
     const pct = total ? Math.round(score/total*100) : 0;
     const pass = total && score >= Math.ceil(total*0.6);
@@ -885,7 +895,7 @@ function injectSelfScore(text){
   if(first && first.parentElement === content) first.after(banner);
   else content.prepend(banner);
 
-  if(!submitted) return;
+  if(!submitted || !fpMatch) return;
 
   /* 自评表填充：找同时含「题号」与「得分」表头的表格 */
   content.querySelectorAll('table').forEach(tb=>{
@@ -919,6 +929,12 @@ function loadQuizStore(){
   st.sel = st.sel || {}; st.locked = st.locked || {};
   return st;
 }
+/* 试卷内容指纹：作答时记录，统计时校验——试卷洗牌/改版后旧作答记录自动失效 */
+function fpHash(s){
+  let h = 5381;
+  for(let i = 0; i < s.length; i += 61){ h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+  return s.length + '-' + (h >>> 0).toString(36);
+}
 async function renderQuiz(text){
   const ok = await ensureMarked();
   const q = state.quiz;
@@ -934,6 +950,17 @@ async function renderQuiz(text){
   q.ansMap = ansMap; q.ansMeta = ansMeta;
   q.ansFilePath = ansFile ? ansFile.path : null;
   q.store = loadQuizStore();
+  if(!q.store.fp && (Object.keys(q.store.sel).length || q.store.submitted)){
+    /* 旧版试卷（10.10洗牌前）的作答记录：指纹缺失即版本不明，自动清空避免错位判分 */
+    q.store = {sel:{}, locked:{}, submitted:false, mode:q.store.mode || 'exam', firstTs:0, fp:fpHash(text)};
+    LS.set('quiz:'+state.current, q.store);
+    LS.del('score:'+state.current);
+    buildTree();
+    setTimeout(()=> toast('检测到旧版试卷的作答记录（试卷曾于10.10均衡化洗牌），已自动清空，请重新作答'), 600);
+  }else{
+    q.store.fp = fpHash(text);
+    LS.set('quiz:'+state.current, q.store);
+  }
   const parts = [quizBannerHTML(q.store, ansMap)];
   for(const seg of q.segs){
     if(seg.type === 'md'){
@@ -1363,6 +1390,13 @@ const ACTIONS = {
   'q-copy'     : ()=> copyText(buildWrongSummary()).then(ok=>{ if(ok) toast('已复制，可粘贴到错题本.md'); }),
   'q-ans'      : ()=>{ if(state.quiz && state.quiz.ansFilePath) openFile(state.quiz.ansFilePath); },
   'go-quiz'    : ()=>{ const qf = findQuizFile(); if(qf) openFile(qf.path); else toast('未找到对应试题文件'); },
+  'go-quiz-redo': ()=>{
+    const qf = findQuizFile();
+    if(!qf){ toast('未找到对应试题文件'); return; }
+    LS.del('quiz:'+qf.path); LS.del('score:'+qf.path);
+    openFile(qf.path);
+    toast('旧作答记录已清除，请重新作答——交卷后解析页将精确统计');
+  },
   'q-wrong'    : e=>{
     const on = document.body.classList.toggle('onlywrong');
     e.target.textContent = on ? '显示全部' : '只看错题';

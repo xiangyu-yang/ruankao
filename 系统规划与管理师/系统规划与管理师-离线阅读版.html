@@ -7,22 +7,27 @@
 *{box-sizing:border-box;-webkit-text-size-adjust:100%}
 html{-webkit-font-smoothing:antialiased}
 body{margin:0;font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;color:#1d2129;background:#f5f6f7;font-size:16px;line-height:1.75}
-/* 顶部欢迎卡兼作工具栏（不使用fixed） */
 .welcome{background:#0a6cff;color:#fff;border-radius:12px;padding:12px 14px;margin:10px 0 12px}
 .welcome b{font-size:16px}
 .welcome p{margin:6px 0 0;font-size:13.5px;color:#dbe8ff;line-height:1.6}
 .homelinks{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .homelinks a{background:rgba(255,255,255,.18);border-radius:8px;padding:7px 11px;font-size:13.5px;font-weight:600;color:#fff;text-decoration:none;white-space:nowrap}
-/* 每卷卡片头部的卷内工具条 */
 .shead{display:flex;align-items:center;gap:8px;margin:0 0 10px;border-bottom:1px solid #e8edf3;padding-bottom:8px;flex-wrap:wrap}
 .shead .st{font-weight:800;font-size:16.5px;color:#0a35a8;flex:1;min-width:200px}
 .shead label{background:#0a6cff;color:#fff;border-radius:8px;padding:7px 12px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
-.shead label.aon{background:#1fa35c}
 .stog{display:none}
 .stog:checked ~ .shead label[for]{background:#1fa35c}
-#drawer{background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0 12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-#drawer .gh{font-weight:700;color:#0a6cff;padding:8px 0 4px;font-size:14.5px}
-#drawer a{display:block;padding:6px 4px 6px 12px;color:#333;text-decoration:none;font-size:14px;line-height:1.5}
+/* 目录 */
+#drawer{background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.ntitle{font-weight:800;color:#0a35a8;padding:2px 0 8px;font-size:15px}
+details.ng{border:1px solid #e3e8ef;border-radius:10px;margin:7px 0;background:#fbfcfe;overflow:hidden}
+details.ng summary{list-style:none;cursor:pointer;font-weight:700;color:#0a6cff;padding:11px 12px;font-size:14.5px;display:flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+details.ng summary::-webkit-details-marker{display:none}
+details.ng summary::before{content:'▸';font-size:12px;color:#7f8b99}
+details.ng[open] summary::before{content:'▾'}
+details.ng summary .cnt{margin-left:auto;font-size:11.5px;color:#9aa5b1;font-weight:400}
+details.ng a{display:block;padding:7px 12px 7px 26px;color:#333;text-decoration:none;font-size:14px;border-top:1px solid #eef2f6;line-height:1.5}
+details.ng a:active{background:#eef4ff}
 #content{padding:6px 12px 60px;max-width:880px;margin:0 auto}
 section.card{background:#fff;border-radius:12px;padding:14px 14px 8px;margin:0 0 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 section.card:target{outline:3px solid #7fb2ff;outline-offset:2px}
@@ -53,7 +58,6 @@ strong{color:#b02a00}
 .opt .ol{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #c4cdd8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5a6572;margin-top:1px}
 .qa:checked + .opt{border-color:#0a6cff;background:#eef6ff}
 .qa:checked + .opt .ol{background:#0a6cff;border-color:#0a6cff;color:#fff}
-/* 卷内答案开关（.stog 与 .qwrap 同级，通过 ~ 影响） */
 .stog:checked ~ .qwrap .qa.corr + .opt{border-color:#1fa35c;background:#e9f8ef}
 .stog:checked ~ .qwrap .qa.corr + .opt .ol{background:#1fa35c;border-color:#1fa35c;color:#fff}
 .stog:checked ~ .qwrap .qa.corr + .opt .ot::after{content:'　✓ 正确答案';color:#1fa35c;font-weight:700}
@@ -66,10 +70,10 @@ strong{color:#b02a00}
 <div id="content">
 <div class="welcome">
 <b>系统规划与管理师 · 离线做题版</b>
-<p>全部 161 个文件内嵌、无需联网；已启用 2344 道可点选单选题。<b>点 A/B/C/D 作答</b>；每份试卷标题旁有「✓ 显示答案」按钮——开启后正确项标绿、你选错的项标红，再点一次关闭。目录在下方。</p>
-<div class="homelinks"><a href="#drawer">📋 打开目录</a><a href="#bottom">⏬ 跳到考前预测卷</a></div>
+<p>全部 161 个文件内嵌、无需联网；2344 道单选题可点选作答。<b>点 A/B/C/D 作答</b>，每份试卷标题旁的「✓ 显示答案」可核对对错（正确项标绿、选错项标红）。目录默认折叠，点开分组选择试卷。</p>
+<div class="homelinks"><a href="#drawer">📋 打开目录</a><a href="#s153">⏬ 跳到考前预测卷</a></div>
 </div>
-<nav id="drawer"><div class="gh">总览</div><a href="#s1">00-备考总计划</a><a href="#s2">说明（题库使用）</a><div class="gh">Day01</div><a href="#s3">01-真题考点精讲</a><div class="gh">Day01</div><a href="#s4">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day01</div><a href="#s5">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day01</div><a href="#s6">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day01</div><a href="#s7">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day02</div><a href="#s8">01-真题考点精讲</a><div class="gh">Day02</div><a href="#s9">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day02</div><a href="#s10">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day02</div><a href="#s11">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day02</div><a href="#s12">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day03</div><a href="#s13">01-真题考点精讲</a><div class="gh">Day03</div><a href="#s14">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day03</div><a href="#s15">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day03</div><a href="#s16">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day03</div><a href="#s17">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day04</div><a href="#s18">01-真题考点精讲</a><div class="gh">Day04</div><a href="#s19">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day04</div><a href="#s20">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day04</div><a href="#s21">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day04</div><a href="#s22">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day05</div><a href="#s23">01-真题考点精讲</a><div class="gh">Day05</div><a href="#s24">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day05</div><a href="#s25">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day05</div><a href="#s26">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day05</div><a href="#s27">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day06</div><a href="#s28">01-真题考点精讲</a><div class="gh">Day06</div><a href="#s29">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day06</div><a href="#s30">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day06</div><a href="#s31">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day06</div><a href="#s32">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day07</div><a href="#s33">01-真题考点精讲</a><div class="gh">Day07</div><a href="#s34">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day07</div><a href="#s35">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day07</div><a href="#s36">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day07</div><a href="#s37">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day08</div><a href="#s38">01-真题考点精讲</a><div class="gh">Day08</div><a href="#s39">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day08</div><a href="#s40">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day08</div><a href="#s41">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day08</div><a href="#s42">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day09</div><a href="#s43">01-真题考点精讲</a><div class="gh">Day09</div><a href="#s44">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day09</div><a href="#s45">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day09</div><a href="#s46">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day09</div><a href="#s47">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day10</div><a href="#s48">01-真题考点精讲</a><div class="gh">Day10</div><a href="#s49">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day10</div><a href="#s50">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day10</div><a href="#s51">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day10</div><a href="#s52">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day11</div><a href="#s53">01-真题考点精讲</a><div class="gh">Day11</div><a href="#s54">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day11</div><a href="#s55">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day11</div><a href="#s56">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day11</div><a href="#s57">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day12</div><a href="#s58">01-真题考点精讲</a><div class="gh">Day12</div><a href="#s59">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day12</div><a href="#s60">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day12</div><a href="#s61">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day12</div><a href="#s62">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day13</div><a href="#s63">01-真题考点精讲</a><div class="gh">Day13</div><a href="#s64">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day13</div><a href="#s65">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day13</div><a href="#s66">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day13</div><a href="#s67">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day14</div><a href="#s68">01-真题考点精讲</a><div class="gh">Day14</div><a href="#s69">02-模拟卷-综合知识-试题（可做题 71 道）</a><div class="gh">Day14</div><a href="#s70">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day14</div><a href="#s71">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day14</div><a href="#s72">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day15</div><a href="#s73">01-真题考点精讲</a><div class="gh">Day15</div><a href="#s74">02-模拟卷-综合知识-试题（可做题 55 道）</a><div class="gh">Day15</div><a href="#s75">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day15</div><a href="#s76">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day15</div><a href="#s77">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day16</div><a href="#s78">01-真题考点精讲</a><div class="gh">Day16</div><a href="#s79">02-模拟卷-综合知识-试题（可做题 70 道）</a><div class="gh">Day16</div><a href="#s80">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day16</div><a href="#s81">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day16</div><a href="#s82">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day17</div><a href="#s83">01-真题考点精讲</a><div class="gh">Day17</div><a href="#s84">02-模拟卷-综合知识-试题（可做题 72 道）</a><div class="gh">Day17</div><a href="#s85">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day17</div><a href="#s86">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day17</div><a href="#s87">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day18</div><a href="#s88">01-真题考点精讲</a><div class="gh">Day18</div><a href="#s89">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day18</div><a href="#s90">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day18</div><a href="#s91">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day18</div><a href="#s92">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day19</div><a href="#s93">01-真题考点精讲</a><div class="gh">Day19</div><a href="#s94">02-模拟卷-综合知识-试题（可做题 72 道）</a><div class="gh">Day19</div><a href="#s95">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day19</div><a href="#s96">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day19</div><a href="#s97">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day20</div><a href="#s98">01-真题考点精讲</a><div class="gh">Day20</div><a href="#s99">02-模拟卷-综合知识-试题（可做题 72 道）</a><div class="gh">Day20</div><a href="#s100">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day20</div><a href="#s101">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day20</div><a href="#s102">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day21</div><a href="#s103">01-真题考点精讲</a><div class="gh">Day21</div><a href="#s104">02-模拟卷-综合知识-试题（可做题 72 道）</a><div class="gh">Day21</div><a href="#s105">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day21</div><a href="#s106">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day21</div><a href="#s107">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day22</div><a href="#s108">01-真题考点精讲</a><div class="gh">Day22</div><a href="#s109">02-模拟卷-综合知识-试题（可做题 71 道）</a><div class="gh">Day22</div><a href="#s110">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day22</div><a href="#s111">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day22</div><a href="#s112">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day23</div><a href="#s113">01-真题考点精讲</a><div class="gh">Day23</div><a href="#s114">02-模拟卷-综合知识-试题（可做题 71 道）</a><div class="gh">Day23</div><a href="#s115">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day23</div><a href="#s116">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day23</div><a href="#s117">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day24</div><a href="#s118">01-真题考点精讲</a><div class="gh">Day24</div><a href="#s119">02-模拟卷-综合知识-试题（可做题 72 道）</a><div class="gh">Day24</div><a href="#s120">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day24</div><a href="#s121">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day24</div><a href="#s122">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day25</div><a href="#s123">01-真题考点精讲</a><div class="gh">Day25</div><a href="#s124">02-模拟卷-综合知识-试题（可做题 71 道）</a><div class="gh">Day25</div><a href="#s125">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day25</div><a href="#s126">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day25</div><a href="#s127">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day26</div><a href="#s128">01-真题考点精讲</a><div class="gh">Day26</div><a href="#s129">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day26</div><a href="#s130">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day26</div><a href="#s131">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day26</div><a href="#s132">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day27</div><a href="#s133">01-真题考点精讲</a><div class="gh">Day27</div><a href="#s134">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day27</div><a href="#s135">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day27</div><a href="#s136">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day27</div><a href="#s137">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day28</div><a href="#s138">01-真题考点精讲</a><div class="gh">Day28</div><a href="#s139">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day28</div><a href="#s140">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day28</div><a href="#s141">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day28</div><a href="#s142">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day29</div><a href="#s143">01-真题考点精讲</a><div class="gh">Day29</div><a href="#s144">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day29</div><a href="#s145">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day29</div><a href="#s146">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day29</div><a href="#s147">05-模拟卷-论文-题目与写作指导</a><div class="gh">Day30</div><a href="#s148">01-真题考点精讲</a><div class="gh">Day30</div><a href="#s149">02-模拟卷-综合知识-试题（可做题 75 道）</a><div class="gh">Day30</div><a href="#s150">03-模拟卷-综合知识-答案与解析</a><div class="gh">Day30</div><a href="#s151">04-模拟卷-案例分析-试题与参考答案</a><div class="gh">Day30</div><a href="#s152">05-模拟卷-论文-题目与写作指导</a><div class="gh">考前真题预测（明日重点）</div><a href="#s153">使用说明</a><a href="#s154">预测卷一·01-综合知识-试题（可做题 75 道）</a><a href="#s155">预测卷一·02-综合知识-答案与解析</a><a href="#s156">预测卷一·03-案例分析-试题与参考答案</a><a href="#s157">预测卷一·04-论文-题目与范文</a><a href="#s158">预测卷二·01-综合知识-试题（可做题 75 道）</a><a href="#s159">预测卷二·02-综合知识-答案与解析</a><a href="#s160">预测卷二·03-案例分析-试题与参考答案</a><a href="#s161">预测卷二·04-论文-题目与范文</a></nav>
+<nav id="drawer"><div class="ntitle">📋 全部内容目录（点分组名展开/收起）</div><details class="ng"><summary>总览（计划与说明）<span class="cnt">2 个文件</span></summary><a href="#s1">00-备考总计划</a><a href="#s2">题库使用说明</a></details><details class="ng"><summary>Day01<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s3">01-真题考点精讲</a><a href="#s4">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s5">03-模拟卷-综合知识-答案与解析</a><a href="#s6">04-模拟卷-案例分析-试题与参考答案</a><a href="#s7">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day02<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s8">01-真题考点精讲</a><a href="#s9">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s10">03-模拟卷-综合知识-答案与解析</a><a href="#s11">04-模拟卷-案例分析-试题与参考答案</a><a href="#s12">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day03<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s13">01-真题考点精讲</a><a href="#s14">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s15">03-模拟卷-综合知识-答案与解析</a><a href="#s16">04-模拟卷-案例分析-试题与参考答案</a><a href="#s17">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day04<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s18">01-真题考点精讲</a><a href="#s19">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s20">03-模拟卷-综合知识-答案与解析</a><a href="#s21">04-模拟卷-案例分析-试题与参考答案</a><a href="#s22">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day05<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s23">01-真题考点精讲</a><a href="#s24">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s25">03-模拟卷-综合知识-答案与解析</a><a href="#s26">04-模拟卷-案例分析-试题与参考答案</a><a href="#s27">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day06<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s28">01-真题考点精讲</a><a href="#s29">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s30">03-模拟卷-综合知识-答案与解析</a><a href="#s31">04-模拟卷-案例分析-试题与参考答案</a><a href="#s32">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day07<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s33">01-真题考点精讲</a><a href="#s34">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s35">03-模拟卷-综合知识-答案与解析</a><a href="#s36">04-模拟卷-案例分析-试题与参考答案</a><a href="#s37">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day08<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s38">01-真题考点精讲</a><a href="#s39">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s40">03-模拟卷-综合知识-答案与解析</a><a href="#s41">04-模拟卷-案例分析-试题与参考答案</a><a href="#s42">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day09<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s43">01-真题考点精讲</a><a href="#s44">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s45">03-模拟卷-综合知识-答案与解析</a><a href="#s46">04-模拟卷-案例分析-试题与参考答案</a><a href="#s47">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day10<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s48">01-真题考点精讲</a><a href="#s49">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s50">03-模拟卷-综合知识-答案与解析</a><a href="#s51">04-模拟卷-案例分析-试题与参考答案</a><a href="#s52">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day11<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s53">01-真题考点精讲</a><a href="#s54">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s55">03-模拟卷-综合知识-答案与解析</a><a href="#s56">04-模拟卷-案例分析-试题与参考答案</a><a href="#s57">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day12<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s58">01-真题考点精讲</a><a href="#s59">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s60">03-模拟卷-综合知识-答案与解析</a><a href="#s61">04-模拟卷-案例分析-试题与参考答案</a><a href="#s62">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day13<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s63">01-真题考点精讲</a><a href="#s64">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s65">03-模拟卷-综合知识-答案与解析</a><a href="#s66">04-模拟卷-案例分析-试题与参考答案</a><a href="#s67">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day14<span class="cnt">5 个文件 · 71 题</span></summary><a href="#s68">01-真题考点精讲</a><a href="#s69">02-模拟卷-综合知识-试题（可做题 71 道）</a><a href="#s70">03-模拟卷-综合知识-答案与解析</a><a href="#s71">04-模拟卷-案例分析-试题与参考答案</a><a href="#s72">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day15<span class="cnt">5 个文件 · 55 题</span></summary><a href="#s73">01-真题考点精讲</a><a href="#s74">02-模拟卷-综合知识-试题（可做题 55 道）</a><a href="#s75">03-模拟卷-综合知识-答案与解析</a><a href="#s76">04-模拟卷-案例分析-试题与参考答案</a><a href="#s77">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day16<span class="cnt">5 个文件 · 70 题</span></summary><a href="#s78">01-真题考点精讲</a><a href="#s79">02-模拟卷-综合知识-试题（可做题 70 道）</a><a href="#s80">03-模拟卷-综合知识-答案与解析</a><a href="#s81">04-模拟卷-案例分析-试题与参考答案</a><a href="#s82">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day17<span class="cnt">5 个文件 · 72 题</span></summary><a href="#s83">01-真题考点精讲</a><a href="#s84">02-模拟卷-综合知识-试题（可做题 72 道）</a><a href="#s85">03-模拟卷-综合知识-答案与解析</a><a href="#s86">04-模拟卷-案例分析-试题与参考答案</a><a href="#s87">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day18<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s88">01-真题考点精讲</a><a href="#s89">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s90">03-模拟卷-综合知识-答案与解析</a><a href="#s91">04-模拟卷-案例分析-试题与参考答案</a><a href="#s92">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day19<span class="cnt">5 个文件 · 72 题</span></summary><a href="#s93">01-真题考点精讲</a><a href="#s94">02-模拟卷-综合知识-试题（可做题 72 道）</a><a href="#s95">03-模拟卷-综合知识-答案与解析</a><a href="#s96">04-模拟卷-案例分析-试题与参考答案</a><a href="#s97">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day20<span class="cnt">5 个文件 · 72 题</span></summary><a href="#s98">01-真题考点精讲</a><a href="#s99">02-模拟卷-综合知识-试题（可做题 72 道）</a><a href="#s100">03-模拟卷-综合知识-答案与解析</a><a href="#s101">04-模拟卷-案例分析-试题与参考答案</a><a href="#s102">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day21<span class="cnt">5 个文件 · 72 题</span></summary><a href="#s103">01-真题考点精讲</a><a href="#s104">02-模拟卷-综合知识-试题（可做题 72 道）</a><a href="#s105">03-模拟卷-综合知识-答案与解析</a><a href="#s106">04-模拟卷-案例分析-试题与参考答案</a><a href="#s107">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day22<span class="cnt">5 个文件 · 71 题</span></summary><a href="#s108">01-真题考点精讲</a><a href="#s109">02-模拟卷-综合知识-试题（可做题 71 道）</a><a href="#s110">03-模拟卷-综合知识-答案与解析</a><a href="#s111">04-模拟卷-案例分析-试题与参考答案</a><a href="#s112">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day23<span class="cnt">5 个文件 · 71 题</span></summary><a href="#s113">01-真题考点精讲</a><a href="#s114">02-模拟卷-综合知识-试题（可做题 71 道）</a><a href="#s115">03-模拟卷-综合知识-答案与解析</a><a href="#s116">04-模拟卷-案例分析-试题与参考答案</a><a href="#s117">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day24<span class="cnt">5 个文件 · 72 题</span></summary><a href="#s118">01-真题考点精讲</a><a href="#s119">02-模拟卷-综合知识-试题（可做题 72 道）</a><a href="#s120">03-模拟卷-综合知识-答案与解析</a><a href="#s121">04-模拟卷-案例分析-试题与参考答案</a><a href="#s122">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day25<span class="cnt">5 个文件 · 71 题</span></summary><a href="#s123">01-真题考点精讲</a><a href="#s124">02-模拟卷-综合知识-试题（可做题 71 道）</a><a href="#s125">03-模拟卷-综合知识-答案与解析</a><a href="#s126">04-模拟卷-案例分析-试题与参考答案</a><a href="#s127">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day26<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s128">01-真题考点精讲</a><a href="#s129">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s130">03-模拟卷-综合知识-答案与解析</a><a href="#s131">04-模拟卷-案例分析-试题与参考答案</a><a href="#s132">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day27<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s133">01-真题考点精讲</a><a href="#s134">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s135">03-模拟卷-综合知识-答案与解析</a><a href="#s136">04-模拟卷-案例分析-试题与参考答案</a><a href="#s137">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day28<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s138">01-真题考点精讲</a><a href="#s139">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s140">03-模拟卷-综合知识-答案与解析</a><a href="#s141">04-模拟卷-案例分析-试题与参考答案</a><a href="#s142">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day29<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s143">01-真题考点精讲</a><a href="#s144">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s145">03-模拟卷-综合知识-答案与解析</a><a href="#s146">04-模拟卷-案例分析-试题与参考答案</a><a href="#s147">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>Day30<span class="cnt">5 个文件 · 75 题</span></summary><a href="#s148">01-真题考点精讲</a><a href="#s149">02-模拟卷-综合知识-试题（可做题 75 道）</a><a href="#s150">03-模拟卷-综合知识-答案与解析</a><a href="#s151">04-模拟卷-案例分析-试题与参考答案</a><a href="#s152">05-模拟卷-论文-题目与写作指导</a></details><details class="ng"><summary>⭐ 考前真题预测（明日重点）<span class="cnt">9 个文件 · 150 题</span></summary><a href="#s153">使用说明</a><a href="#s154">预测卷一·01-综合知识-试题（可做题 75 道）</a><a href="#s155">预测卷一·02-综合知识-答案与解析</a><a href="#s156">预测卷一·03-案例分析-试题与参考答案</a><a href="#s157">预测卷一·04-论文-题目与范文</a><a href="#s158">预测卷二·01-综合知识-试题（可做题 75 道）</a><a href="#s159">预测卷二·02-综合知识-答案与解析</a><a href="#s160">预测卷二·03-案例分析-试题与参考答案</a><a href="#s161">预测卷二·04-论文-题目与范文</a></details></nav>
 <section class="card" id="s1"><div class="shead"><span class="st">00-备考总计划</span></div><h1>系统规划与管理师 30 天完整备考体系</h1>
 <blockquote>
 <p>目标：软考高级 · 系统规划与管理师（副高级职称）
@@ -415,7 +419,7 @@ strong{color:#b02a00}
 <li>考前一周左右关注报考地软考办通知，按时打印准考证，确认考场批次时间。</li>
 <li>机考无需自带文具，带齐<strong>准考证+身份证件</strong>即可；提前熟悉机考作答界面（官方一般提供模拟作答系统）。</li>
 <li>上午场连考4小时，注意体力和上机节奏；论文下午场提前到场适应环境。</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s2"><div class="shead"><span class="st">说明（题库使用）</span></div><h1>系统规划与管理师 · 30 天题库</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s2"><div class="shead"><span class="st">题库使用说明</span></div><h1>系统规划与管理师 · 30 天题库</h1>
 <p>软考高级"系规管"科目训练题库。考试构成：综合知识（75 道单选）＋案例分析（3 道大题）＋论文（2 选 1，约 2500 字）。本目录按官方教程（第2版，方法篇/能力篇/实践篇/法规篇）编排 30 天完整内容，每日五件套，可反复训练。</p>
 <h2>30 天知识地图</h2>
 <div class="tw"><table>
@@ -768,7 +772,7 @@ strong{color:#b02a00}
 <li>[ ] 能在一分钟内算出MTBF=810、MTTR=90时的可用度（答案90%）</li>
 <li>[ ] 能区分SLA/OLA/UC、直接/间接成本</li>
 </ul>
-<p>完成自查后，进入《02-模拟卷-综合知识-试题.md》，<strong>严格限时150分钟</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s4"><input type="checkbox" class="stog" id="t4"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t4">✓ 显示答案</label></div><div class="qwrap"><h1>Day01 模拟卷 · 科目一：综合知识（试题）</h1>
+<p>完成自查后，进入《02-模拟卷-综合知识-试题.md》，<strong>严格限时150分钟</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s4"><input type="checkbox" class="stog" id="ts4"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts4">✓ 显示答案</label></div><div class="qwrap"><h1>Day01 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>全真模拟 ｜ 考试日期：2026年10月25日 ｜ Day01：2026年10月9日
 <strong>作答要求：75道单项选择题，每题1分，满分75分，限时150分钟。</strong>
@@ -1524,7 +1528,7 @@ strong{color:#b02a00}
 <li>[ ] 可行性研究四内容</li>
 <li>[ ] NIST五特征＋四部署模式</li>
 <li>[ ] 能算：月可用率99.9%允许停机多少分钟（43.2分钟）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s9"><input type="checkbox" class="stog" id="t9"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t9">✓ 显示答案</label></div><div class="qwrap"><h1>Day02 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s9"><input type="checkbox" class="stog" id="ts9"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts9">✓ 显示答案</label></div><div class="qwrap"><h1>Day02 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day02 ｜ 2026年10月10日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第4-6章（信息系统规划、应用系统规划、云资源规划），其余全章均衡覆盖
@@ -2167,7 +2171,7 @@ strong{color:#b02a00}
 <li>[ ] 等保五个规定动作顺序</li>
 <li>[ ] 非对称加密解决什么问题、数字签名保证什么</li>
 <li>[ ] 容器与虚拟机的两点差异</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s14"><input type="checkbox" class="stog" id="t14"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t14">✓ 显示答案</label></div><div class="qwrap"><h1>Day03 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s14"><input type="checkbox" class="stog" id="ts14"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts14">✓ 显示答案</label></div><div class="qwrap"><h1>Day03 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day03 ｜ 2026年10月11日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第7-10章（网络环境、数据资源、信息安全、云原生）</p>
@@ -2793,7 +2797,7 @@ strong{color:#b02a00}
 <li>[ ] 会算：3班制、人均30单/班、日业务量400单、储备率20%时需多少人（答案：400/30×3×1.2=48人）</li>
 </ul>
 <hr />
-<p>（配套：今日综合知识卷侧重第11-12章；案例卷考治理、SLA计算与人员配置计算）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s19"><input type="checkbox" class="stog" id="t19"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t19">✓ 显示答案</label></div><div class="qwrap"><h1>Day04 模拟卷 · 科目一：综合知识（试题）</h1>
+<p>（配套：今日综合知识卷侧重第11-12章；案例卷考治理、SLA计算与人员配置计算）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s19"><input type="checkbox" class="stog" id="ts19"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts19">✓ 显示答案</label></div><div class="qwrap"><h1>Day04 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day04 ｜ 2026年10月12日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第11-12章（信息系统治理、信息系统服务管理——战略规划与设计）</p>
@@ -3440,7 +3444,7 @@ IT治理是组织治理的重要组成部分，它确保IT与业务战略一致�
 <li>[ ] 柯氏四级与BSC四维互不混淆</li>
 <li>[ ] 德尔菲法特征（匿名、多轮、收敛）</li>
 <li>[ ] 能算：总成本310万、年服务量2万单→单位成本155元/单</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s24"><input type="checkbox" class="stog" id="t24"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t24">✓ 显示答案</label></div><div class="qwrap"><h1>Day05 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s24"><input type="checkbox" class="stog" id="ts24"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts24">✓ 显示答案</label></div><div class="qwrap"><h1>Day05 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day05 ｜ 2026年10月13日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第12章后半（服务运营提升、退役终止、持续改进）＋第13章人员管理</p>
@@ -4048,7 +4052,7 @@ IT治理是组织治理的重要组成部分，它确保IT与业务战略一致�
 <li>[ ] 安全库存的依据（故障率、采购周期、服务水平）</li>
 <li>[ ] 十大知识领域能数出来；绩效域知道是8个</li>
 <li>[ ] 会算：10人团队沟通渠道数（45条）；概率30%×影响100万＝风险暴露30万</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s29"><input type="checkbox" class="stog" id="t29"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t29">✓ 显示答案</label></div><div class="qwrap"><h1>Day06 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s29"><input type="checkbox" class="stog" id="ts29"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts29">✓ 显示答案</label></div><div class="qwrap"><h1>Day06 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day06 ｜ 2026年10月14日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第14-17章（规范与过程、技术与研发、资源与工具、项目管理）</p>
@@ -4676,7 +4680,7 @@ IT服务项目具有需求多变、干系人多、交付与运维衔接紧密等
 <li>[ ] 敏感个人信息至少5类</li>
 <li>[ ] 标准分级顺序＋复审周期5年＋IDT含义</li>
 <li>[ ] 软著保护期两种口径</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s34"><input type="checkbox" class="stog" id="t34"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t34">✓ 显示答案</label></div><div class="qwrap"><h1>Day07 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s34"><input type="checkbox" class="stog" id="ts34"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts34">✓ 显示答案</label></div><div class="qwrap"><h1>Day07 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day07 ｜ 2026年10月15日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第18-24章（六大实践规划＋法律法规和标准规范）</p>
@@ -5429,7 +5433,7 @@ IT服务项目具有需求多变、干系人多、交付与运维衔接紧密等
 <li>[ ] 案例得分记录：____/75（目标≥45）</li>
 <li>[ ] 全部错题已标注A/B/C归类</li>
 <li>[ ] 本日新增错题已录入错题本.md</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s39"><input type="checkbox" class="stog" id="t39"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t39">✓ 显示答案</label></div><div class="qwrap"><h1>Day08 全真模拟一 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s39"><input type="checkbox" class="stog" id="ts39"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts39">✓ 显示答案</label></div><div class="qwrap"><h1>Day08 全真模拟一 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day08 ｜ 2026年10月16日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 侧重：第1-10章（基础篇＋方法篇）——请按真实考试纪律执行</p>
@@ -6196,7 +6200,7 @@ IT战略规划将企业战略转化为IT建设蓝图。总体架构设计（业�
 <li>[ ] 综合知识得分<strong><em>_/75（第11-17章板块</em></strong>_/56）</li>
 <li>[ ] 案例得分____/75</li>
 <li>[ ] 错题A/B/C归类完毕并入错题本</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s44"><input type="checkbox" class="stog" id="t44"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t44">✓ 显示答案</label></div><div class="qwrap"><h1>Day09 全真模拟二 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s44"><input type="checkbox" class="stog" id="ts44"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts44">✓ 显示答案</label></div><div class="qwrap"><h1>Day09 全真模拟二 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day09 ｜ 2026年10月17日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 侧重：第11-17章（能力篇）</p>
@@ -6837,7 +6841,7 @@ IT战略规划将企业战略转化为IT建设蓝图。总体架构设计（业�
 <li>[ ] 错≥3次考点已在模拟前重读</li>
 <li>[ ] 三科得分记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 新错题入本（明日起错题本只增不删，考前一天只看错题本）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s49"><input type="checkbox" class="stog" id="t49"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t49">✓ 显示答案</label></div><div class="qwrap"><h1>Day10 全真模拟三 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s49"><input type="checkbox" class="stog" id="ts49"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts49">✓ 显示答案</label></div><div class="qwrap"><h1>Day10 全真模拟三 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day10 ｜ 2026年10月18日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 结构完全仿真：基础篇16＋方法篇21＋能力篇28＋实践法规6＋英语4</p>
@@ -7521,7 +7525,7 @@ IT战略规划将企业战略转化为IT建设蓝图。总体架构设计（业�
 <li>[ ] 九大公式可默写（合上本子测）</li>
 <li>[ ] 综合知识得分<strong><em>_/75；案例得分</em></strong>_/75</li>
 <li>[ ] 计算类错题全部归入"公式错"或"审题错"</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s54"><input type="checkbox" class="stog" id="t54"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t54">✓ 显示答案</label></div><div class="qwrap"><h1>Day11 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s54"><input type="checkbox" class="stog" id="ts54"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts54">✓ 显示答案</label></div><div class="qwrap"><h1>Day11 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day11 ｜ 2026年10月19日 ｜ 75道单项选择题，每题1分，限时150分钟
 特色：第1-15题为计算/推演专项（今日主题），其余全章均衡</p>
@@ -8087,7 +8091,7 @@ A需求与数据标准（3，起点）；B平台搭建（6，紧前A）；C数�
 <li>[ ] 今日三科得分记录齐全</li>
 <li>[ ] 论文全文完成并保存（电子版留档，考前一天朗读一遍）</li>
 <li>[ ] 明日（Day13）为终极全真模拟日：严格按10月25日时刻表执行</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s59"><input type="checkbox" class="stog" id="t59"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t59">✓ 显示答案</label></div><div class="qwrap"><h1>Day12 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s59"><input type="checkbox" class="stog" id="ts59"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts59">✓ 显示答案</label></div><div class="qwrap"><h1>Day12 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day12 ｜ 2026年10月20日 ｜ 75道单项选择题，每题1分，限时150分钟（上午完成，为晚间论文留足精力）</p>
 </blockquote>
@@ -8718,7 +8722,7 @@ A需求与数据标准（3，起点）；B平台搭建（6，紧前A）；C数�
 <li>[ ] 三科严格按时刻表完成并记录分数：综合<strong><em>_/75、案例</em></strong>_/75、论文（完整度自评）____</li>
 <li>[ ] 全部错题已标注 A/B/C 归类</li>
 <li>[ ] 考前 20 速记点能 10 分钟内过完</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s64"><input type="checkbox" class="stog" id="t64"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t64">✓ 显示答案</label></div><div class="qwrap"><h1>Day13 终极全真模拟 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s64"><input type="checkbox" class="stog" id="ts64"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts64">✓ 显示答案</label></div><div class="qwrap"><h1>Day13 终极全真模拟 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day13 ｜ 2026年10月21日 ｜ <strong>严格 8:30 开考，150 分钟，到点交卷</strong>
 结构仿真：基础篇16＋方法篇21＋能力篇27＋实践法规6＋英语4＋综合1</p>
@@ -9362,7 +9366,7 @@ IT 服务运行中风险无处不在。建立覆盖识别、评估、应对与�
 <li>[ ] 错题本全部过完，错两次以上的考点重做原题</li>
 <li>[ ] 两套论文素材数字能默写</li>
 <li>[ ] 考场物品清单核对完毕</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s69"><input type="checkbox" class="stog" id="t69"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="t69">✓ 显示答案</label></div><div class="qwrap"><h1>Day14 高频热身卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s69"><input type="checkbox" class="stog" id="ts69"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="ts69">✓ 显示答案</label></div><div class="qwrap"><h1>Day14 高频热身卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day14 ｜ 2026年10月22日 ｜ 75道高频考点快测卷，限时100分钟（比正式考试快，保持手感）
 全部题目来自历年最高频考点域，做完立即对答案——这是考前最后一份新题</p>
@@ -9801,7 +9805,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 <strong>10.25（周日）</strong>：07:00 起床；早餐七分饱；提前 40 分钟到场；<strong>08:20 入座，深呼吸三次，开考</strong>。</p>
 <blockquote>
 <p>十五天，你把一本 800 页的教程拆成了 1100 道题、120 个速记点、10 套论文框架。现在，去把证书带回来。祝考试顺利，一次通过！</p>
-</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s74"><input type="checkbox" class="stog" id="t74"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共55题</span><label for="t74">✓ 显示答案</label></div><div class="qwrap"><h1>Day15 考前热身卷 · 科目一：综合知识（试题）</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s74"><input type="checkbox" class="stog" id="ts74"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共55题</span><label for="ts74">✓ 显示答案</label></div><div class="qwrap"><h1>Day15 考前热身卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day15 ｜ 2026年10月23日 ｜ 30 分钟快测（20题核心判断＋高频 55 题），只求保持手感
 本卷为轻量热身，不设严格计时压力——错题只看解析不再扩展</p>
@@ -10228,7 +10232,7 @@ Day01 摸底 → Day02-07 主题攻坚 → Day08-13 六轮全真 → Day14 回�
 <li>[ ] 三科限时完成并记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 错题与四轮全真题合并去重</li>
 <li>[ ] "最终错题清单"已建立</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s79"><input type="checkbox" class="stog" id="t79"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共70题</span><label for="t79">✓ 显示答案</label></div><div class="qwrap"><h1>Day16 强化加练 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s79"><input type="checkbox" class="stog" id="ts79"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共70题</span><label for="ts79">✓ 显示答案</label></div><div class="qwrap"><h1>Day16 强化加练 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day16 ｜ 强化加练卷 ｜ 75道单项选择题，每题1分，限时150分钟</p>
 </blockquote>
@@ -10888,7 +10892,7 @@ A. release　B. relay　C. refill　D. refuse</p>
 <ul>
 <li>[ ] 专项卷得分：<strong><em>_/75（第1-10章板块 </em></strong>_/55）</li>
 <li>[ ] 上表 10 个易错对全部能秒答</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s84"><input type="checkbox" class="stog" id="t84"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="t84">✓ 显示答案</label></div><div class="qwrap"><h1>Day17 专项一 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s84"><input type="checkbox" class="stog" id="ts84"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="ts84">✓ 显示答案</label></div><div class="qwrap"><h1>Day17 专项一 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day17 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 第1-10章占55题</p>
 </blockquote>
@@ -11525,7 +11529,7 @@ A. Method　B. Market　C. Machine　D. Material</p>
 <li>[ ] 本卷得分：<strong><em>_/75（能力篇板块 </em></strong>_/52）</li>
 <li>[ ] 九大对比对全部秒答</li>
 <li>[ ] 万金油五步能在案例中默用</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s89"><input type="checkbox" class="stog" id="t89"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t89">✓ 显示答案</label></div><div class="qwrap"><h1>Day18 专项二 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s89"><input type="checkbox" class="stog" id="ts89"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts89">✓ 显示答案</label></div><div class="qwrap"><h1>Day18 专项二 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day18 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 能力篇（第11-17章）占52题</p>
 </blockquote>
@@ -12086,7 +12090,7 @@ A. Method　B. Market　C. Machine　D. Material</p>
 <li>[ ] "一表通"能默写六大领域关注焦点</li>
 <li>[ ] 法规数字清单全部过目（错一罚抄三遍）</li>
 <li>[ ] 本卷得分：<strong><em>_/75（实践法规板块 </em></strong>_/48）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s94"><input type="checkbox" class="stog" id="t94"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="t94">✓ 显示答案</label></div><div class="qwrap"><h1>Day19 专项三 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s94"><input type="checkbox" class="stog" id="ts94"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="ts94">✓ 显示答案</label></div><div class="qwrap"><h1>Day19 专项三 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day19 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 实践篇＋法规占48题</p>
 </blockquote>
@@ -12713,7 +12717,7 @@ A. bidding　B. betting　C. borrowing　D. bartering</p>
 <li>[ ] 变形公式（并联可用度/TCPI/自动化替代率）已掌握</li>
 <li>[ ] 本卷计算题 20 题得分：____/20</li>
 <li>[ ] 六步法在案例中已默用</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s99"><input type="checkbox" class="stog" id="t99"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="t99">✓ 显示答案</label></div><div class="qwrap"><h1>Day20 专项四 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s99"><input type="checkbox" class="stog" id="ts99"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="ts99">✓ 显示答案</label></div><div class="qwrap"><h1>Day20 专项四 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day20 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 计算与推演题1-20</p>
 </blockquote>
@@ -13324,7 +13328,7 @@ A. components　B. customers　C. contracts　D. clouds</p>
 <li>[ ] 素材包 C 数字已默写</li>
 <li>[ ] 十大扩展主题各能 1 句话说清骨架</li>
 <li>[ ] 时间刻度表已了然于心</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s104"><input type="checkbox" class="stog" id="t104"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="t104">✓ 显示答案</label></div><div class="qwrap"><h1>Day21 专项五 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s104"><input type="checkbox" class="stog" id="ts104"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="ts104">✓ 显示答案</label></div><div class="qwrap"><h1>Day21 专项五 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day21 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 论文配套日：综合知识为全章均衡卷</p>
 </blockquote>
@@ -13787,7 +13791,7 @@ A. resumption　B. retirement　C. recruitment　D. reduction</p>
 <li>[ ] 三科得分记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 5 道错题完成"命题人四问"</li>
 <li>[ ] 八种武器能对号入座到自己的错题</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s109"><input type="checkbox" class="stog" id="t109"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="t109">✓ 显示答案</label></div><div class="qwrap"><h1>Day22 全真模拟六 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s109"><input type="checkbox" class="stog" id="ts109"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="ts109">✓ 显示答案</label></div><div class="qwrap"><h1>Day22 全真模拟六 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day22 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 结构完全仿真</p>
 </blockquote>
@@ -14417,7 +14421,7 @@ A. activities　B. animals　C. advertisements　D. airports</p>
 <li>[ ] 综合知识提速卷得分：____/75（125分钟内）</li>
 <li>[ ] 案例得分：____/75（75分钟内）</li>
 <li>[ ] 提速后正确率与常速对比下降 ≤5 题（超过则说明提速变抢答，回调节奏）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s114"><input type="checkbox" class="stog" id="t114"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="t114">✓ 显示答案</label></div><div class="qwrap"><h1>Day23 全真模拟七 · 科目一：综合知识（试题·提速卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s114"><input type="checkbox" class="stog" id="ts114"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="ts114">✓ 显示答案</label></div><div class="qwrap"><h1>Day23 全真模拟七 · 科目一：综合知识（试题·提速卷）</h1>
 <blockquote>
 <p>Day23 ｜ 强化加练卷 ｜ 75题，<strong>提速限时125分钟</strong></p>
 </blockquote>
@@ -15104,7 +15108,7 @@ DevOps 强调开发运维一体协作与自动化流水线。传统团队转型 
 <li>[ ] 本卷得分：____/75（这是全库错点的"期终考试"，目标 65+）</li>
 <li>[ ] "变会三步"全部执行</li>
 <li>[ ] 错题本完成一轮"移出/保留/二变"整理</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s119"><input type="checkbox" class="stog" id="t119"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="t119">✓ 显示答案</label></div><div class="qwrap"><h1>Day24 错题变形卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s119"><input type="checkbox" class="stog" id="ts119"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共72题</span><label for="ts119">✓ 显示答案</label></div><div class="qwrap"><h1>Day24 错题变形卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day24 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 全部为高频错点变形题</p>
 </blockquote>
@@ -15655,7 +15659,7 @@ A. drills　B. drills（ synonyms: exercises）　C. dreams　D. drafts</p>
 <li>[ ] 本卷得分：<strong><em>_/75（交叉题板块 </em></strong>_/30）</li>
 <li>[ ] 十大交叉带能各举一例</li>
 <li>[ ] 三步拆解法已在案例中应用</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s124"><input type="checkbox" class="stog" id="t124"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="t124">✓ 显示答案</label></div><div class="qwrap"><h1>Day25 全真模拟八 · 科目一：综合知识（试题·交叉卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s124"><input type="checkbox" class="stog" id="ts124"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共71题</span><label for="ts124">✓ 显示答案</label></div><div class="qwrap"><h1>Day25 全真模拟八 · 科目一：综合知识（试题·交叉卷）</h1>
 <blockquote>
 <p>Day25 ｜ 强化加练卷 ｜ 75题，限时150分钟</p>
 </blockquote>
@@ -16242,7 +16246,7 @@ A. risk　B. rain　C. rent　D. rice</p>
 <li>[ ] 案例三题得分：____/75（进阶卷目标 50+）</li>
 <li>[ ] 五维结构在每题中自检过</li>
 <li>[ ] 数据表读表三步已应用</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s129"><input type="checkbox" class="stog" id="t129"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t129">✓ 显示答案</label></div><div class="qwrap"><h1>Day26 专项七 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s129"><input type="checkbox" class="stog" id="ts129"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts129">✓ 显示答案</label></div><div class="qwrap"><h1>Day26 专项七 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day26 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 含10道案例思维题（66-75）</p>
 </blockquote>
@@ -17085,7 +17089,7 @@ A. risk　B. rain　C. rent　D. rice</p>
 <ul>
 <li>[ ] 50 组速查表通读并标记仍犹豫的组（≤5组）</li>
 <li>[ ] 本卷得分：____/75（概念卷目标 65+）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s134"><input type="checkbox" class="stog" id="t134"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t134">✓ 显示答案</label></div><div class="qwrap"><h1>Day27 专项八 · 科目一：综合知识（试题·概念对决卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s134"><input type="checkbox" class="stog" id="ts134"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts134">✓ 显示答案</label></div><div class="qwrap"><h1>Day27 专项八 · 科目一：综合知识（试题·概念对决卷）</h1>
 <blockquote>
 <p>Day27 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 全部为混淆辨析题</p>
 </blockquote>
@@ -17621,7 +17625,7 @@ A. risk　B. rain　C. rent　D. rice</p>
 <li>[ ] 本卷得分：____/75</li>
 <li>[ ] 解析标注的九型情境题逐题复盘（找到自己易掉的坑型）</li>
 <li>[ ] 五律能默写</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s139"><input type="checkbox" class="stog" id="t139"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t139">✓ 显示答案</label></div><div class="qwrap"><h1>Day28 全真模拟九 · 科目一：综合知识（试题·临场决策卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s139"><input type="checkbox" class="stog" id="ts139"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts139">✓ 显示答案</label></div><div class="qwrap"><h1>Day28 全真模拟九 · 科目一：综合知识（试题·临场决策卷）</h1>
 <blockquote>
 <p>Day28 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 本卷埋设考场九型情境（解析标注）</p>
 </blockquote>
@@ -18219,7 +18223,7 @@ IT服务全生命周期（第12章 战略规划→设计→运营→退役→持
 <li>[ ] 能默画"六层网络图"框架</li>
 <li>[ ] 15 条连接线能各说一句话</li>
 <li>[ ] 本卷得分：____/75</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s144"><input type="checkbox" class="stog" id="t144"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t144">✓ 显示答案</label></div><div class="qwrap"><h1>Day29 专项九 · 科目一：综合知识（试题·知识网络卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s144"><input type="checkbox" class="stog" id="ts144"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts144">✓ 显示答案</label></div><div class="qwrap"><h1>Day29 专项九 · 科目一：综合知识（试题·知识网络卷）</h1>
 <blockquote>
 <p>Day29 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 按"战略→规划→建设→运营→实践→规则"六层分布</p>
 </blockquote>
@@ -18806,7 +18810,7 @@ A集团并购B公司后IT整合面临：①两套ERP（品牌不同、主数据�
 <li>[ ] 收官卷得分：____/75（目标 70+，这是 2250 题训练应达到的稳态）</li>
 <li>[ ] 错题本最终清点：仍无法"变会"的题 ≤5 道</li>
 <li>[ ] 给自己的 30 天写一段复盘（三句话：学到什么/不足什么/下一步什么）</li>
-</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s149"><input type="checkbox" class="stog" id="t149"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="t149">✓ 显示答案</label></div><div class="qwrap"><h1>Day30 收官卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s149"><input type="checkbox" class="stog" id="ts149"><div class="shead"><span class="st">02-模拟卷-综合知识-试题 · 共75题</span><label for="ts149">✓ 显示答案</label></div><div class="qwrap"><h1>Day30 收官卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day30 ｜ 全系列收官卷 ｜ 75题，限时150分钟 ｜ "最小闭包"考点全覆盖</p>
 </blockquote>
@@ -19333,7 +19337,7 @@ IT 服务的最终目的是为组织创造价值。从价值定义、价值交�
 </ul>
 <blockquote>
 <p>全部题目按《系统规划与管理师教程（第2版）》知识体系仿真命制，不冒充真题原文。</p>
-</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s154"><input type="checkbox" class="stog" id="t154"><div class="shead"><span class="st">预测卷一·01-综合知识-试题 · 共75题</span><label for="t154">✓ 显示答案</label></div><div class="qwrap"><h1>预测卷一 · 综合知识（试题）</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s154"><input type="checkbox" class="stog" id="ts154"><div class="shead"><span class="st">预测卷一·01-综合知识-试题 · 共75题</span><label for="ts154">✓ 显示答案</label></div><div class="qwrap"><h1>预测卷一 · 综合知识（试题）</h1>
 <blockquote>
 <p>对标 2025 真题章节分布：24 章全覆盖（每章 2-5 题）＋专业英语 5 题 ｜ 75 道单项选择题</p>
 </blockquote>
@@ -19665,7 +19669,7 @@ IT 服务的最终目的是为组织创造价值。从价值定义、价值交�
 <li><strong>扣题要狠</strong>：题干每个小问都必须在正文有对应段落，宁可通过显式小标题呼应；</li>
 <li><strong>不足要真</strong>：写一个真实可信的小缺陷＋改进方向，比"完美主义"更显真诚；</li>
 <li><strong>时间分配</strong>：读题选题 10 分钟→提纲 20 分钟→写作 80 分钟→检查 10 分钟；选素材最熟的题，不选"看起来好写"的题。</li>
-</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s158"><input type="checkbox" class="stog" id="t158"><div class="shead"><span class="st">预测卷二·01-综合知识-试题 · 共75题</span><label for="t158">✓ 显示答案</label></div><div class="qwrap"><h1>预测卷二 · 综合知识（试题）</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s158"><input type="checkbox" class="stog" id="ts158"><div class="shead"><span class="st">预测卷二·01-综合知识-试题 · 共75题</span><label for="ts158">✓ 显示答案</label></div><div class="qwrap"><h1>预测卷二 · 综合知识（试题）</h1>
 <blockquote>
 <p>对标 2026 命题趋势：新增章节加重（云资源/数据资源/云原生/数字化转型）＋场景化判断＋计算强化 ｜ 75 道单项选择题</p>
 </blockquote>

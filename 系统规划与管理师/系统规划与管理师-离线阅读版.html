@@ -2,28 +2,24 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <title>系统规划与管理师 · 离线阅读版</title>
 <style>
 *{box-sizing:border-box;-webkit-text-size-adjust:100%}
-html{-webkit-font-smoothing:antialiased}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{margin:0;font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;color:#1d2129;background:#f5f6f7;font-size:16px;line-height:1.75}
 #bar{position:fixed;top:0;left:0;right:0;height:48px;background:#0a6cff;color:#fff;display:flex;align-items:center;z-index:99;padding:0 12px;gap:10px;box-shadow:0 1px 6px rgba(0,0,0,.25)}
-#bar button{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:8px;padding:7px 12px;font-size:15px;font-weight:600}
+#bar label{background:rgba(255,255,255,.18);border-radius:8px;padding:7px 12px;font-size:15px;font-weight:600;cursor:pointer}
 #bar .t{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+#navtog{display:none}
 #drawer{position:fixed;top:48px;bottom:0;left:0;width:78%;max-width:340px;background:#fff;z-index:98;overflow-y:auto;transform:translateX(-105%);transition:transform .22s;padding:8px 0 40px;box-shadow:2px 0 12px rgba(0,0,0,.15)}
-#drawer.open{transform:translateX(0)}
+#navtog:checked ~ #drawer{transform:translateX(0)}
 #drawer .g{margin:2px 0}
 #drawer .gh{font-weight:700;color:#0a6cff;padding:10px 14px 4px;font-size:14px}
 #drawer a{display:block;padding:7px 14px 7px 22px;color:#333;text-decoration:none;font-size:14px;border-left:3px solid transparent}
 #drawer a:active{background:#eef4ff}
 #content{padding:60px 14px 70px;max-width:860px;margin:0 auto}
 section.card{background:#fff;border-radius:12px;padding:16px 16px 8px;margin:0 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-details.sec{border:0}
-details.sec>summary{cursor:pointer;font-weight:700;font-size:17px;color:#0a35a8;padding:4px 0 10px;list-style:none;display:flex;align-items:center;gap:8px}
-details.sec>summary::-webkit-details-marker{display:none}
-details.sec>summary::before{content:'▸';color:#0a6cff;transition:transform .15s;font-size:13px}
-details.sec[open]>summary::before{transform:rotate(90deg)}
+section.card:target{outline:3px solid #7fb2ff;outline-offset:2px}
 h1{font-size:22px;margin:6px 0 14px;color:#0a35a8}
 h2{font-size:19px;margin:22px 0 10px;border-left:4px solid #0a6cff;padding-left:9px}
 h3{font-size:17px;margin:18px 0 8px}
@@ -43,19 +39,17 @@ ul,ol{padding-left:22px;margin:8px 0}
 li{margin:4px 0}
 hr{border:0;border-top:1px dashed #c9d2dd;margin:16px 0}
 strong{color:#b02a00}
-#top{position:fixed;right:14px;bottom:18px;z-index:97;background:#0a6cff;color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:19px;box-shadow:0 2px 8px rgba(10,108,255,.4)}
-.mask{position:fixed;inset:48px 0 0 0;background:rgba(0,0,0,.25);z-index:97;display:none}
-.mask.show{display:block}
+.gotop{display:block;text-align:center;color:#0a6cff;font-size:14px;padding:10px;margin:4px 0 0;text-decoration:none}
 </style></head>
-<body>
-<div id="bar"><button onclick="tg()">☰ 目录</button><div class="t">系统规划与管理师 · 题库阅读版</div></div>
-<div id="mask" onclick="tg()"></div>
-<nav id="drawer"><div class="g"><div class="gh">总览</div><a href="#s1" onclick="go('s1')">00-备考总计划</a><a href="#s2" onclick="go('s2')">说明（题库使用）</a></div><div class="g"><div class="gh">Day01</div><a href="#s3" onclick="go('s3')">01-真题考点精讲</a><a href="#s4" onclick="go('s4')">02-模拟卷-综合知识-试题</a><a href="#s5" onclick="go('s5')">03-模拟卷-综合知识-答案与解析</a><a href="#s6" onclick="go('s6')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s7" onclick="go('s7')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day02</div><a href="#s8" onclick="go('s8')">01-真题考点精讲</a><a href="#s9" onclick="go('s9')">02-模拟卷-综合知识-试题</a><a href="#s10" onclick="go('s10')">03-模拟卷-综合知识-答案与解析</a><a href="#s11" onclick="go('s11')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s12" onclick="go('s12')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day03</div><a href="#s13" onclick="go('s13')">01-真题考点精讲</a><a href="#s14" onclick="go('s14')">02-模拟卷-综合知识-试题</a><a href="#s15" onclick="go('s15')">03-模拟卷-综合知识-答案与解析</a><a href="#s16" onclick="go('s16')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s17" onclick="go('s17')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day04</div><a href="#s18" onclick="go('s18')">01-真题考点精讲</a><a href="#s19" onclick="go('s19')">02-模拟卷-综合知识-试题</a><a href="#s20" onclick="go('s20')">03-模拟卷-综合知识-答案与解析</a><a href="#s21" onclick="go('s21')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s22" onclick="go('s22')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day05</div><a href="#s23" onclick="go('s23')">01-真题考点精讲</a><a href="#s24" onclick="go('s24')">02-模拟卷-综合知识-试题</a><a href="#s25" onclick="go('s25')">03-模拟卷-综合知识-答案与解析</a><a href="#s26" onclick="go('s26')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s27" onclick="go('s27')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day06</div><a href="#s28" onclick="go('s28')">01-真题考点精讲</a><a href="#s29" onclick="go('s29')">02-模拟卷-综合知识-试题</a><a href="#s30" onclick="go('s30')">03-模拟卷-综合知识-答案与解析</a><a href="#s31" onclick="go('s31')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s32" onclick="go('s32')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day07</div><a href="#s33" onclick="go('s33')">01-真题考点精讲</a><a href="#s34" onclick="go('s34')">02-模拟卷-综合知识-试题</a><a href="#s35" onclick="go('s35')">03-模拟卷-综合知识-答案与解析</a><a href="#s36" onclick="go('s36')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s37" onclick="go('s37')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day08</div><a href="#s38" onclick="go('s38')">01-真题考点精讲</a><a href="#s39" onclick="go('s39')">02-模拟卷-综合知识-试题</a><a href="#s40" onclick="go('s40')">03-模拟卷-综合知识-答案与解析</a><a href="#s41" onclick="go('s41')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s42" onclick="go('s42')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day09</div><a href="#s43" onclick="go('s43')">01-真题考点精讲</a><a href="#s44" onclick="go('s44')">02-模拟卷-综合知识-试题</a><a href="#s45" onclick="go('s45')">03-模拟卷-综合知识-答案与解析</a><a href="#s46" onclick="go('s46')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s47" onclick="go('s47')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day10</div><a href="#s48" onclick="go('s48')">01-真题考点精讲</a><a href="#s49" onclick="go('s49')">02-模拟卷-综合知识-试题</a><a href="#s50" onclick="go('s50')">03-模拟卷-综合知识-答案与解析</a><a href="#s51" onclick="go('s51')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s52" onclick="go('s52')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day11</div><a href="#s53" onclick="go('s53')">01-真题考点精讲</a><a href="#s54" onclick="go('s54')">02-模拟卷-综合知识-试题</a><a href="#s55" onclick="go('s55')">03-模拟卷-综合知识-答案与解析</a><a href="#s56" onclick="go('s56')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s57" onclick="go('s57')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day12</div><a href="#s58" onclick="go('s58')">01-真题考点精讲</a><a href="#s59" onclick="go('s59')">02-模拟卷-综合知识-试题</a><a href="#s60" onclick="go('s60')">03-模拟卷-综合知识-答案与解析</a><a href="#s61" onclick="go('s61')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s62" onclick="go('s62')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day13</div><a href="#s63" onclick="go('s63')">01-真题考点精讲</a><a href="#s64" onclick="go('s64')">02-模拟卷-综合知识-试题</a><a href="#s65" onclick="go('s65')">03-模拟卷-综合知识-答案与解析</a><a href="#s66" onclick="go('s66')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s67" onclick="go('s67')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day14</div><a href="#s68" onclick="go('s68')">01-真题考点精讲</a><a href="#s69" onclick="go('s69')">02-模拟卷-综合知识-试题</a><a href="#s70" onclick="go('s70')">03-模拟卷-综合知识-答案与解析</a><a href="#s71" onclick="go('s71')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s72" onclick="go('s72')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day15</div><a href="#s73" onclick="go('s73')">01-真题考点精讲</a><a href="#s74" onclick="go('s74')">02-模拟卷-综合知识-试题</a><a href="#s75" onclick="go('s75')">03-模拟卷-综合知识-答案与解析</a><a href="#s76" onclick="go('s76')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s77" onclick="go('s77')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day16</div><a href="#s78" onclick="go('s78')">01-真题考点精讲</a><a href="#s79" onclick="go('s79')">02-模拟卷-综合知识-试题</a><a href="#s80" onclick="go('s80')">03-模拟卷-综合知识-答案与解析</a><a href="#s81" onclick="go('s81')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s82" onclick="go('s82')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day17</div><a href="#s83" onclick="go('s83')">01-真题考点精讲</a><a href="#s84" onclick="go('s84')">02-模拟卷-综合知识-试题</a><a href="#s85" onclick="go('s85')">03-模拟卷-综合知识-答案与解析</a><a href="#s86" onclick="go('s86')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s87" onclick="go('s87')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day18</div><a href="#s88" onclick="go('s88')">01-真题考点精讲</a><a href="#s89" onclick="go('s89')">02-模拟卷-综合知识-试题</a><a href="#s90" onclick="go('s90')">03-模拟卷-综合知识-答案与解析</a><a href="#s91" onclick="go('s91')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s92" onclick="go('s92')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day19</div><a href="#s93" onclick="go('s93')">01-真题考点精讲</a><a href="#s94" onclick="go('s94')">02-模拟卷-综合知识-试题</a><a href="#s95" onclick="go('s95')">03-模拟卷-综合知识-答案与解析</a><a href="#s96" onclick="go('s96')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s97" onclick="go('s97')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day20</div><a href="#s98" onclick="go('s98')">01-真题考点精讲</a><a href="#s99" onclick="go('s99')">02-模拟卷-综合知识-试题</a><a href="#s100" onclick="go('s100')">03-模拟卷-综合知识-答案与解析</a><a href="#s101" onclick="go('s101')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s102" onclick="go('s102')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day21</div><a href="#s103" onclick="go('s103')">01-真题考点精讲</a><a href="#s104" onclick="go('s104')">02-模拟卷-综合知识-试题</a><a href="#s105" onclick="go('s105')">03-模拟卷-综合知识-答案与解析</a><a href="#s106" onclick="go('s106')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s107" onclick="go('s107')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day22</div><a href="#s108" onclick="go('s108')">01-真题考点精讲</a><a href="#s109" onclick="go('s109')">02-模拟卷-综合知识-试题</a><a href="#s110" onclick="go('s110')">03-模拟卷-综合知识-答案与解析</a><a href="#s111" onclick="go('s111')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s112" onclick="go('s112')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day23</div><a href="#s113" onclick="go('s113')">01-真题考点精讲</a><a href="#s114" onclick="go('s114')">02-模拟卷-综合知识-试题</a><a href="#s115" onclick="go('s115')">03-模拟卷-综合知识-答案与解析</a><a href="#s116" onclick="go('s116')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s117" onclick="go('s117')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day24</div><a href="#s118" onclick="go('s118')">01-真题考点精讲</a><a href="#s119" onclick="go('s119')">02-模拟卷-综合知识-试题</a><a href="#s120" onclick="go('s120')">03-模拟卷-综合知识-答案与解析</a><a href="#s121" onclick="go('s121')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s122" onclick="go('s122')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day25</div><a href="#s123" onclick="go('s123')">01-真题考点精讲</a><a href="#s124" onclick="go('s124')">02-模拟卷-综合知识-试题</a><a href="#s125" onclick="go('s125')">03-模拟卷-综合知识-答案与解析</a><a href="#s126" onclick="go('s126')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s127" onclick="go('s127')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day26</div><a href="#s128" onclick="go('s128')">01-真题考点精讲</a><a href="#s129" onclick="go('s129')">02-模拟卷-综合知识-试题</a><a href="#s130" onclick="go('s130')">03-模拟卷-综合知识-答案与解析</a><a href="#s131" onclick="go('s131')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s132" onclick="go('s132')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day27</div><a href="#s133" onclick="go('s133')">01-真题考点精讲</a><a href="#s134" onclick="go('s134')">02-模拟卷-综合知识-试题</a><a href="#s135" onclick="go('s135')">03-模拟卷-综合知识-答案与解析</a><a href="#s136" onclick="go('s136')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s137" onclick="go('s137')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day28</div><a href="#s138" onclick="go('s138')">01-真题考点精讲</a><a href="#s139" onclick="go('s139')">02-模拟卷-综合知识-试题</a><a href="#s140" onclick="go('s140')">03-模拟卷-综合知识-答案与解析</a><a href="#s141" onclick="go('s141')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s142" onclick="go('s142')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day29</div><a href="#s143" onclick="go('s143')">01-真题考点精讲</a><a href="#s144" onclick="go('s144')">02-模拟卷-综合知识-试题</a><a href="#s145" onclick="go('s145')">03-模拟卷-综合知识-答案与解析</a><a href="#s146" onclick="go('s146')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s147" onclick="go('s147')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day30</div><a href="#s148" onclick="go('s148')">01-真题考点精讲</a><a href="#s149" onclick="go('s149')">02-模拟卷-综合知识-试题</a><a href="#s150" onclick="go('s150')">03-模拟卷-综合知识-答案与解析</a><a href="#s151" onclick="go('s151')">04-模拟卷-案例分析-试题与参考答案</a><a href="#s152" onclick="go('s152')">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">考前真题预测（明日考试重点）</div><a href="#s153" onclick="go('s153')">考前真题预测·使用说明</a><a href="#s154" onclick="go('s154')">预测卷一·01-综合知识-试题</a><a href="#s155" onclick="go('s155')">预测卷一·02-综合知识-答案与解析</a><a href="#s156" onclick="go('s156')">预测卷一·03-案例分析-试题与参考答案</a><a href="#s157" onclick="go('s157')">预测卷一·04-论文-题目与范文</a><a href="#s158" onclick="go('s158')">预测卷二·01-综合知识-试题</a><a href="#s159" onclick="go('s159')">预测卷二·02-综合知识-答案与解析</a><a href="#s160" onclick="go('s160')">预测卷二·03-案例分析-试题与参考答案</a><a href="#s161" onclick="go('s161')">预测卷二·04-论文-题目与范文</a></div></nav>
+<body id="top">
+<input type="checkbox" id="navtog">
+<div id="bar"><label for="navtog">☰ 目录</label><div class="t">系统规划与管理师 · 题库阅读版</div></div>
+<nav id="drawer"><div class="g"><div class="gh">总览</div><a href="#s1">00-备考总计划</a><a href="#s2">说明（题库使用）</a></div><div class="g"><div class="gh">Day01</div><a href="#s3">01-真题考点精讲</a><a href="#s4">02-模拟卷-综合知识-试题</a><a href="#s5">03-模拟卷-综合知识-答案与解析</a><a href="#s6">04-模拟卷-案例分析-试题与参考答案</a><a href="#s7">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day02</div><a href="#s8">01-真题考点精讲</a><a href="#s9">02-模拟卷-综合知识-试题</a><a href="#s10">03-模拟卷-综合知识-答案与解析</a><a href="#s11">04-模拟卷-案例分析-试题与参考答案</a><a href="#s12">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day03</div><a href="#s13">01-真题考点精讲</a><a href="#s14">02-模拟卷-综合知识-试题</a><a href="#s15">03-模拟卷-综合知识-答案与解析</a><a href="#s16">04-模拟卷-案例分析-试题与参考答案</a><a href="#s17">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day04</div><a href="#s18">01-真题考点精讲</a><a href="#s19">02-模拟卷-综合知识-试题</a><a href="#s20">03-模拟卷-综合知识-答案与解析</a><a href="#s21">04-模拟卷-案例分析-试题与参考答案</a><a href="#s22">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day05</div><a href="#s23">01-真题考点精讲</a><a href="#s24">02-模拟卷-综合知识-试题</a><a href="#s25">03-模拟卷-综合知识-答案与解析</a><a href="#s26">04-模拟卷-案例分析-试题与参考答案</a><a href="#s27">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day06</div><a href="#s28">01-真题考点精讲</a><a href="#s29">02-模拟卷-综合知识-试题</a><a href="#s30">03-模拟卷-综合知识-答案与解析</a><a href="#s31">04-模拟卷-案例分析-试题与参考答案</a><a href="#s32">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day07</div><a href="#s33">01-真题考点精讲</a><a href="#s34">02-模拟卷-综合知识-试题</a><a href="#s35">03-模拟卷-综合知识-答案与解析</a><a href="#s36">04-模拟卷-案例分析-试题与参考答案</a><a href="#s37">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day08</div><a href="#s38">01-真题考点精讲</a><a href="#s39">02-模拟卷-综合知识-试题</a><a href="#s40">03-模拟卷-综合知识-答案与解析</a><a href="#s41">04-模拟卷-案例分析-试题与参考答案</a><a href="#s42">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day09</div><a href="#s43">01-真题考点精讲</a><a href="#s44">02-模拟卷-综合知识-试题</a><a href="#s45">03-模拟卷-综合知识-答案与解析</a><a href="#s46">04-模拟卷-案例分析-试题与参考答案</a><a href="#s47">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day10</div><a href="#s48">01-真题考点精讲</a><a href="#s49">02-模拟卷-综合知识-试题</a><a href="#s50">03-模拟卷-综合知识-答案与解析</a><a href="#s51">04-模拟卷-案例分析-试题与参考答案</a><a href="#s52">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day11</div><a href="#s53">01-真题考点精讲</a><a href="#s54">02-模拟卷-综合知识-试题</a><a href="#s55">03-模拟卷-综合知识-答案与解析</a><a href="#s56">04-模拟卷-案例分析-试题与参考答案</a><a href="#s57">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day12</div><a href="#s58">01-真题考点精讲</a><a href="#s59">02-模拟卷-综合知识-试题</a><a href="#s60">03-模拟卷-综合知识-答案与解析</a><a href="#s61">04-模拟卷-案例分析-试题与参考答案</a><a href="#s62">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day13</div><a href="#s63">01-真题考点精讲</a><a href="#s64">02-模拟卷-综合知识-试题</a><a href="#s65">03-模拟卷-综合知识-答案与解析</a><a href="#s66">04-模拟卷-案例分析-试题与参考答案</a><a href="#s67">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day14</div><a href="#s68">01-真题考点精讲</a><a href="#s69">02-模拟卷-综合知识-试题</a><a href="#s70">03-模拟卷-综合知识-答案与解析</a><a href="#s71">04-模拟卷-案例分析-试题与参考答案</a><a href="#s72">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day15</div><a href="#s73">01-真题考点精讲</a><a href="#s74">02-模拟卷-综合知识-试题</a><a href="#s75">03-模拟卷-综合知识-答案与解析</a><a href="#s76">04-模拟卷-案例分析-试题与参考答案</a><a href="#s77">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day16</div><a href="#s78">01-真题考点精讲</a><a href="#s79">02-模拟卷-综合知识-试题</a><a href="#s80">03-模拟卷-综合知识-答案与解析</a><a href="#s81">04-模拟卷-案例分析-试题与参考答案</a><a href="#s82">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day17</div><a href="#s83">01-真题考点精讲</a><a href="#s84">02-模拟卷-综合知识-试题</a><a href="#s85">03-模拟卷-综合知识-答案与解析</a><a href="#s86">04-模拟卷-案例分析-试题与参考答案</a><a href="#s87">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day18</div><a href="#s88">01-真题考点精讲</a><a href="#s89">02-模拟卷-综合知识-试题</a><a href="#s90">03-模拟卷-综合知识-答案与解析</a><a href="#s91">04-模拟卷-案例分析-试题与参考答案</a><a href="#s92">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day19</div><a href="#s93">01-真题考点精讲</a><a href="#s94">02-模拟卷-综合知识-试题</a><a href="#s95">03-模拟卷-综合知识-答案与解析</a><a href="#s96">04-模拟卷-案例分析-试题与参考答案</a><a href="#s97">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day20</div><a href="#s98">01-真题考点精讲</a><a href="#s99">02-模拟卷-综合知识-试题</a><a href="#s100">03-模拟卷-综合知识-答案与解析</a><a href="#s101">04-模拟卷-案例分析-试题与参考答案</a><a href="#s102">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day21</div><a href="#s103">01-真题考点精讲</a><a href="#s104">02-模拟卷-综合知识-试题</a><a href="#s105">03-模拟卷-综合知识-答案与解析</a><a href="#s106">04-模拟卷-案例分析-试题与参考答案</a><a href="#s107">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day22</div><a href="#s108">01-真题考点精讲</a><a href="#s109">02-模拟卷-综合知识-试题</a><a href="#s110">03-模拟卷-综合知识-答案与解析</a><a href="#s111">04-模拟卷-案例分析-试题与参考答案</a><a href="#s112">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day23</div><a href="#s113">01-真题考点精讲</a><a href="#s114">02-模拟卷-综合知识-试题</a><a href="#s115">03-模拟卷-综合知识-答案与解析</a><a href="#s116">04-模拟卷-案例分析-试题与参考答案</a><a href="#s117">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day24</div><a href="#s118">01-真题考点精讲</a><a href="#s119">02-模拟卷-综合知识-试题</a><a href="#s120">03-模拟卷-综合知识-答案与解析</a><a href="#s121">04-模拟卷-案例分析-试题与参考答案</a><a href="#s122">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day25</div><a href="#s123">01-真题考点精讲</a><a href="#s124">02-模拟卷-综合知识-试题</a><a href="#s125">03-模拟卷-综合知识-答案与解析</a><a href="#s126">04-模拟卷-案例分析-试题与参考答案</a><a href="#s127">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day26</div><a href="#s128">01-真题考点精讲</a><a href="#s129">02-模拟卷-综合知识-试题</a><a href="#s130">03-模拟卷-综合知识-答案与解析</a><a href="#s131">04-模拟卷-案例分析-试题与参考答案</a><a href="#s132">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day27</div><a href="#s133">01-真题考点精讲</a><a href="#s134">02-模拟卷-综合知识-试题</a><a href="#s135">03-模拟卷-综合知识-答案与解析</a><a href="#s136">04-模拟卷-案例分析-试题与参考答案</a><a href="#s137">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day28</div><a href="#s138">01-真题考点精讲</a><a href="#s139">02-模拟卷-综合知识-试题</a><a href="#s140">03-模拟卷-综合知识-答案与解析</a><a href="#s141">04-模拟卷-案例分析-试题与参考答案</a><a href="#s142">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day29</div><a href="#s143">01-真题考点精讲</a><a href="#s144">02-模拟卷-综合知识-试题</a><a href="#s145">03-模拟卷-综合知识-答案与解析</a><a href="#s146">04-模拟卷-案例分析-试题与参考答案</a><a href="#s147">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">Day30</div><a href="#s148">01-真题考点精讲</a><a href="#s149">02-模拟卷-综合知识-试题</a><a href="#s150">03-模拟卷-综合知识-答案与解析</a><a href="#s151">04-模拟卷-案例分析-试题与参考答案</a><a href="#s152">05-模拟卷-论文-题目与写作指导</a></div><div class="g"><div class="gh">考前真题预测（明日考试重点）</div><a href="#s153">考前真题预测·使用说明</a><a href="#s154">预测卷一·01-综合知识-试题</a><a href="#s155">预测卷一·02-综合知识-答案与解析</a><a href="#s156">预测卷一·03-案例分析-试题与参考答案</a><a href="#s157">预测卷一·04-论文-题目与范文</a><a href="#s158">预测卷二·01-综合知识-试题</a><a href="#s159">预测卷二·02-综合知识-答案与解析</a><a href="#s160">预测卷二·03-案例分析-试题与参考答案</a><a href="#s161">预测卷二·04-论文-题目与范文</a></div></nav>
 <div id="content">
 <div style="background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:13.5px;color:#555">
-<b style="color:#0a35a8">离线阅读版</b>：全部 161 个文件已内嵌，无需联网。点左上角「☰ 目录」按 Day 浏览；表格可左右滑动；点各文件标题栏可折叠/展开。祝考试顺利！
+<b style="color:#0a35a8">离线阅读版</b>：全部 161 个文件已内嵌，无需联网。点左上角「☰ 目录」展开/收起目录，点目录中的文件名跳转阅读；表格可左右滑动。祝考试顺利！
 </div>
-<section class="card" id="s1"><details class="sec" open><summary>00-备考总计划</summary><h1>系统规划与管理师 30 天完整备考体系</h1>
+<section class="card" id="s1"><h1>系统规划与管理师 30 天完整备考体系</h1>
 <blockquote>
 <p>目标：软考高级 · 系统规划与管理师（副高级职称）
 制定日期：2026年10月9日（周五）｜ 考试日期：<strong>2026年10月25日（周日）</strong>
@@ -400,7 +394,7 @@ strong{color:#b02a00}
 <li>考前一周左右关注报考地软考办通知，按时打印准考证，确认考场批次时间。</li>
 <li>机考无需自带文具，带齐<strong>准考证+身份证件</strong>即可；提前熟悉机考作答界面（官方一般提供模拟作答系统）。</li>
 <li>上午场连考4小时，注意体力和上机节奏；论文下午场提前到场适应环境。</li>
-</ul></details></section><section class="card" id="s2"><details class="sec" open><summary>说明（题库使用）</summary><h1>系统规划与管理师 · 30 天题库</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s2"><h1>系统规划与管理师 · 30 天题库</h1>
 <p>软考高级"系规管"科目训练题库。考试构成：综合知识（75 道单选）＋案例分析（3 道大题）＋论文（2 选 1，约 2500 字）。本目录按官方教程（第2版，方法篇/能力篇/实践篇/法规篇）编排 30 天完整内容，每日五件套，可反复训练。</p>
 <h2>30 天知识地图</h2>
 <div class="tw"><table>
@@ -579,7 +573,7 @@ strong{color:#b02a00}
 <li><strong>论文素材包</strong>：本目录论文采用"素材包"模式（一个运维服务项目背景适配多主题），背熟素材包后可快速迁移到任意 IT 服务主题；行业背景占用情况见<a href="../00-三科目论文背景行业清单.md">《00-三科目论文背景行业清单》</a>第三节。</li>
 </ul>
 <h2>质量说明</h2>
-<p>本目录为本项目早期生成（早于高项/架构师的行业多样性纪律建立）：论文行业背景存在重复使用（装备制造集团 8 卷、银行类 3 卷等，已如实登记清单），该模式与"素材包复用"训练法兼容。全部模拟题按官方教程知识体系仿真命制，不冒充任何年份真题原文。</p></details></section><section class="card" id="s3"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day01 真题考点精讲：考试全景 + 基础篇核心考点（第1-3章）</h1>
+<p>本目录为本项目早期生成（早于高项/架构师的行业多样性纪律建立）：论文行业背景存在重复使用（装备制造集团 8 卷、银行类 3 卷等，已如实登记清单），该模式与"素材包复用"训练法兼容。全部模拟题按官方教程知识体系仿真命制，不冒充任何年份真题原文。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s3"><h1>Day01 真题考点精讲：考试全景 + 基础篇核心考点（第1-3章）</h1>
 <blockquote>
 <p>Day01 ｜ 2026年10月9日（周五）｜ 距考试还有16天
 今日任务：通读本精讲（约60-90分钟）→ 限时完成今日模拟卷（综合知识75题＋案例分析3题＋论文提纲）→ 对答案复盘</p>
@@ -753,7 +747,7 @@ strong{color:#b02a00}
 <li>[ ] 能在一分钟内算出MTBF=810、MTTR=90时的可用度（答案90%）</li>
 <li>[ ] 能区分SLA/OLA/UC、直接/间接成本</li>
 </ul>
-<p>完成自查后，进入《02-模拟卷-综合知识-试题.md》，<strong>严格限时150分钟</strong>。</p></details></section><section class="card" id="s4"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day01 模拟卷 · 科目一：综合知识（试题）</h1>
+<p>完成自查后，进入《02-模拟卷-综合知识-试题.md》，<strong>严格限时150分钟</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s4"><h1>Day01 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>全真模拟 ｜ 考试日期：2026年10月25日 ｜ Day01：2026年10月9日
 <strong>作答要求：75道单项选择题，每题1分，满分75分，限时150分钟。</strong>
@@ -1142,7 +1136,7 @@ B. knowledge
 C. capacity
 D. change</p>
 <hr />
-<p>（试题完 ｜ 请先自评分数并记录错题，再打开《03-模拟卷-综合知识-答案与解析.md》）</p></details></section><section class="card" id="s5"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day01 模拟卷 · 科目一：综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 请先自评分数并记录错题，再打开《03-模拟卷-综合知识-答案与解析.md》）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s5"><h1>Day01 模拟卷 · 科目一：综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day01 ｜ 2026年10月9日 ｜ 满分75分，45分及格（建议自评≥50分为达标线，冲刺期目标55+）</p>
 </blockquote>
@@ -1509,7 +1503,7 @@ D. change</p>
 1. 得分≥55：节奏良好，把错题考点回读教材对应小节。
 2. 得分45-54：达标边缘，重点补"错题集中在哪一篇"，明日精讲对应章节加倍时间。
 3. 得分&lt;45：不慌，Day01定位摸底；优先抢救第12、17、11章等能力篇主干（综合知识与案例的公共考点），方法篇可后置。
-4. 把每道错题记入 <code>错题本.md</code>：题号＋错因（概念不清/混淆/审题/计算）＋教材定位。</p></details></section><section class="card" id="s6"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day01 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+4. 把每道错题记入 <code>错题本.md</code>：题号＋错因（概念不清/混淆/审题/计算）＋教材定位。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s6"><h1>Day01 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day01 ｜ 2026年10月9日 ｜ 共3题，每题25分，满分75分，限时90分钟
 题型与真题一致：填空题、判断改错题、简答题、计算题
@@ -1684,7 +1678,7 @@ D. change</p>
 <p><strong>案例答题三原则自查</strong>：
 1. 填空题是否用教材原文关键词？（错一个字可能就丢分）
 2. 计算题是否"公式→代入→结果"三步齐全、分步书写？
-3. 简答题是否分点编号作答、先教材语言后结合场景？</p></details></section><section class="card" id="s7"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day01 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+3. 简答题是否分点编号作答、先教材语言后结合场景？</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s7"><h1>Day01 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day01 ｜ 2026年10月9日 ｜ 从下列2题中任选1题作答 ｜ 满分75分
 真实考试要求：120分钟，机考打字作答，<strong>正文2500字左右（摘要约300字＋正文2200字左右）</strong>
@@ -1780,7 +1774,7 @@ D. change</p>
    - 项目A：某集团数据中心运维外包服务（合同额800万/年，设备3000台，团队25人，SLA 99.9%）——适用服务管理、人员、风险、质量类论文；
    - 项目B：某制造企业数字化转型规划（周期6个月，覆盖8大业务域，落地12个数字化场景）——适用规划、治理、转型类论文。</li>
 <li><strong>机考打字</strong>：训练盲打速度，目标40字/分钟以上；平时练习直接在电脑上写提纲与全文。</li>
-</ol></details></section><section class="card" id="s8"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day02 真题考点精讲：方法篇上（第4-6章）</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s8"><h1>Day02 真题考点精讲：方法篇上（第4-6章）</h1>
 <blockquote>
 <p>Day02 ｜ 2026年10月10日（周六）｜ 距考试还有15天
 今日主题：信息系统规划（第4章）、应用系统规划（第5章）、云资源规划（第6章）
@@ -1886,7 +1880,7 @@ D. change</p>
 <li>[ ] 可行性研究四内容</li>
 <li>[ ] NIST五特征＋四部署模式</li>
 <li>[ ] 能算：月可用率99.9%允许停机多少分钟（43.2分钟）</li>
-</ul></details></section><section class="card" id="s9"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day02 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s9"><h1>Day02 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day02 ｜ 2026年10月10日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第4-6章（信息系统规划、应用系统规划、云资源规划），其余全章均衡覆盖
@@ -2273,7 +2267,7 @@ B. hybrid
 C. local
 D. single</p>
 <hr />
-<p>（试题完 ｜ 对答案请翻《03-模拟卷-综合知识-答案与解析.md》）</p></details></section><section class="card" id="s10"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day02 模拟卷 · 科目一：综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 对答案请翻《03-模拟卷-综合知识-答案与解析.md》）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s10"><h1>Day02 模拟卷 · 科目一：综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day02 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -2629,7 +2623,7 @@ D. single</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：第4-6章（今日主题）共26题，若此块失分超过6题，今晚重读《01-精讲》考点1、3、5、6并回教材第4章4.4节。第50题注意审题陷阱（小时vs分钟）。</p></details></section><section class="card" id="s11"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day02 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：第4-6章（今日主题）共26题，若此块失分超过6题，今晚重读《01-精讲》考点1、3、5、6并回教材第4章4.4节。第50题注意审题陷阱（小时vs分钟）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s11"><h1>Day02 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day02 ｜ 共3题，每题25分，限时90分钟 ｜ 先做后对答案</p>
 </blockquote>
@@ -2771,7 +2765,7 @@ D. single</p>
 </tr>
 </tbody>
 </table></div>
-<p>错题考点回读：价值链基本/辅助活动（教材4.4.4）、可行性研究（5.3.2）、NIST特征与存储选型（6.2、6.4）。</p></details></section><section class="card" id="s12"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day02 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>错题考点回读：价值链基本/辅助活动（教材4.4.4）、可行性研究（5.3.2）、NIST特征与存储选型（6.2、6.4）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s12"><h1>Day02 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day02 ｜ 2题选1，120分钟，2500字左右 ｜ 今日完成详细提纲＋摘要草稿</p>
 </blockquote>
@@ -2848,7 +2842,7 @@ D. single</p>
 <p>项目投产后，资源交付周期由15天缩短至2小时，服务器平均利用率由18%提升至61%，机房能耗下降约三成，核心系统可用率达99.99%，全部规划指标达成。不足有二：一是初期个别部门申请资源规格虚高，后来通过配额与计费报表倒逼才回归理性，说明资源治理必须与技术建设同步；二是6个老旧系统因技术债务无法虚拟化，被迫保留物理孤岛，提醒我们规划时应更早介入应用架构治理。我的体会是：第一，云资源规划必须以业务负载与分级为出发点，容量测算要有实测数据支撑；第二，存储与网络的分级设计是成本与性能平衡的关键，"为什么这样分"比"分了什么"更重要；第三，上云不是目的而是手段，迁移策略要一系统一策，灰度与回退预案是业务连续性的底线；第四，建后优化不能停，利用率、PUE与成本的持续治理才能让云的价值真正兑现。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>任选1题写详细提纲（每段论点＋素材要点＋数据设计），摘要写出草稿；周末（Day03）选其中1篇写全文。</p></details></section><section class="card" id="s13"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day03 真题考点精讲：方法篇下（第7-10章）</h1>
+<p>任选1题写详细提纲（每段论点＋素材要点＋数据设计），摘要写出草稿；周末（Day03）选其中1篇写全文。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s13"><h1>Day03 真题考点精讲：方法篇下（第7-10章）</h1>
 <blockquote>
 <p>Day03 ｜ 2026年10月11日（周日）｜ 距考试还有14天
 今日主题：网络环境规划（第7章）、数据资源规划（第8章）、信息安全规划（第9章）、云原生系统规划（第10章）</p>
@@ -2906,7 +2900,7 @@ D. single</p>
 <li>[ ] 等保五个规定动作顺序</li>
 <li>[ ] 非对称加密解决什么问题、数字签名保证什么</li>
 <li>[ ] 容器与虚拟机的两点差异</li>
-</ul></details></section><section class="card" id="s14"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day03 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s14"><h1>Day03 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day03 ｜ 2026年10月11日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第7-10章（网络环境、数据资源、信息安全、云原生）</p>
@@ -3292,7 +3286,7 @@ B. hardware
 C. buildings
 D. data</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s15"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day03 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s15"><h1>Day03 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day03 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -3635,7 +3629,7 @@ D. data</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：第7-10章共48题是今日主题，失分超过12题则今晚重读精讲＋教材对应小节。RPO/RTO、等保五动作、OSI与设备对应、数据质量维度——这四个点综合知识与案例双科高频，务必烂熟。</p></details></section><section class="card" id="s16"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day03 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：第7-10章共48题是今日主题，失分超过12题则今晚重读精讲＋教材对应小节。RPO/RTO、等保五动作、OSI与设备对应、数据质量维度——这四个点综合知识与案例双科高频，务必烂熟。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s16"><h1>Day03 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day03 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -3764,7 +3758,7 @@ D. data</p>
 </tr>
 </tbody>
 </table></div>
-<p>错题考点回读：综合布线六子系统（7.5.4）、RPO/RTO（第9章）、数据标准化三层（8.4）、等保五动作（9.1/24章）。</p></details></section><section class="card" id="s17"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day03 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>错题考点回读：综合布线六子系统（7.5.4）、RPO/RTO（第9章）、数据标准化三层（8.4）、等保五动作（9.1/24章）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s17"><h1>Day03 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day03 ｜ 2题选1 ｜ 今日建议：任选1题写<strong>全文</strong>（周末加练），120分钟，2500字左右</p>
 </blockquote>
@@ -3844,7 +3838,7 @@ D. data</p>
 <p>2024年该项目顺利通过等保三级测评，测评提出的11项一般问题也已全部整改闭环；与项目前一年相比，安全事件年发生率下降76%，再未发生影响诊疗的中断事件。不足方面：一是零信任等新技术的试点推进缓慢，与老旧系统兼容改造成本高；二是部分医务人员初期对U盘管控有抵触，通过配套建设"院内安全云盘"提供合规替代后才化解，提示安全措施必须兼顾用户体验，否则会被绕过。我的体会是：第一，等级保护是安全建设的"纲"，五个规定动作（定级、备案、建设整改、等级测评、监督检查）环环相扣，合规与体系化建设天然统一；第二，纵深防御贵在"层层设防、假设单层必失守"，任何单一手段都不可依赖；第三，安全是持续运营，三分技术七分管理，制度、培训、演练、评审这些"软建设"往往决定实战成败。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>今天是周日：选1题限时120分钟写全文（打字练习），另1题写提纲。写完自查：摘要≤330字？每段有实例与数据？三个论述点都覆盖？</p></details></section><section class="card" id="s18"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day04 真题考点精讲：能力篇上（第11-12章前半）</h1>
+<p>今天是周日：选1题限时120分钟写全文（打字练习），另1题写提纲。写完自查：摘要≤330字？每段有实例与数据？三个论述点都覆盖？</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s18"><h1>Day04 真题考点精讲：能力篇上（第11-12章前半）</h1>
 <blockquote>
 <p>Day04 ｜ 2026年10月12日（周一）｜ 距考试还有13天
 今日主题：信息系统治理（第11章）、信息系统服务管理——服务战略规划与服务设计实现（第12章前半）</p>
@@ -3909,7 +3903,7 @@ D. data</p>
 <li>[ ] 会算：3班制、人均30单/班、日业务量400单、储备率20%时需多少人（答案：400/30×3×1.2=48人）</li>
 </ul>
 <hr />
-<p>（配套：今日综合知识卷侧重第11-12章；案例卷考治理、SLA计算与人员配置计算）</p></details></section><section class="card" id="s19"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day04 模拟卷 · 科目一：综合知识（试题）</h1>
+<p>（配套：今日综合知识卷侧重第11-12章；案例卷考治理、SLA计算与人员配置计算）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s19"><h1>Day04 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day04 ｜ 2026年10月12日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第11-12章（信息系统治理、信息系统服务管理——战略规划与设计）</p>
@@ -4295,7 +4289,7 @@ B. ignore
 C. track（follow up on）
 D. delete</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s20"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day04 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s20"><h1>Day04 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day04 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -4650,7 +4644,7 @@ D. delete</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：第11-12章共41题是今日主题。第14、22、68题是计算题，务必分步重算一遍；SLA/OLA/UC、五流程、需求识别五项若仍混淆，回读精讲考点3、4。</p></details></section><section class="card" id="s21"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day04 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：第11-12章共41题是今日主题。第14、22、68题是计算题，务必分步重算一遍；SLA/OLA/UC、五流程、需求识别五项若仍混淆，回读精讲考点3、4。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s21"><h1>Day04 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day04 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -4795,7 +4789,7 @@ D. delete</p>
 </tr>
 </tbody>
 </table></div>
-<p>今日计算题密集（可用度两道、人员配置两道、流失率、成本利润率），公式务必手抄一遍：可用度＝MTBF/(MTBF+MTTR)；人数＝(业务量/人均)×班次×(1+储备率)；流失率＝离职/平均在岗。</p></details></section><section class="card" id="s22"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day04 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>今日计算题密集（可用度两道、人员配置两道、流失率、成本利润率），公式务必手抄一遍：可用度＝MTBF/(MTBF+MTTR)；人数＝(业务量/人均)×班次×(1+储备率)；流失率＝离职/平均在岗。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s22"><h1>Day04 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day04 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要草稿</p>
 </blockquote>
@@ -4873,7 +4867,7 @@ IT治理是组织治理的重要组成部分，它确保IT与业务战略一致�
 <p>服务运行两年，核心系统可用率实测99.96%，一级故障平均响应11分钟，全部SLA达标；客户满意度调查年均96分以上，第二年获续约并追加安全服务。不足在于：方案设计阶段对部分老旧系统的运维风险估计不足，接管后头两个月相关工单量激增，后来通过与客户协商设立专项改造才缓解——提醒方案设计要把存量系统风险摸深摸透。我的体会是：第一，需求识别是方案设计的源头，客户"要什么"比我们"能给什么"更重要；第二，服务目录的三级结构（清单＋分级＋说明）让服务从模糊走向可交易、可考核；第三，SLA必须有OLA与UC的两翼支撑，把客户和我方绑成责任共同体，服务级别才能持续达成；第四，方案设计要在承诺与能力之间守住专业底线，可持续的达标远比漂亮的中标更重要。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>写提纲时把"数字素材"先定好（可用率、响应时限、人数、成本），论文无数据必失分。周末（Day07前）把Day02-Day06其中一篇论文写全文。</p></details></section><section class="card" id="s23"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day05 真题考点精讲：能力篇中（第12章后半＋第13章）</h1>
+<p>写提纲时把"数字素材"先定好（可用率、响应时限、人数、成本），论文无数据必失分。周末（Day07前）把Day02-Day06其中一篇论文写全文。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s23"><h1>Day05 真题考点精讲：能力篇中（第12章后半＋第13章）</h1>
 <blockquote>
 <p>Day05 ｜ 2026年10月13日（周二）｜ 距考试还有12天
 今日主题：服务运营提升、服务退役终止、持续改进与监督（第12章后半）；人员管理（第13章）</p>
@@ -4933,7 +4927,7 @@ IT治理是组织治理的重要组成部分，它确保IT与业务战略一致�
 <li>[ ] 柯氏四级与BSC四维互不混淆</li>
 <li>[ ] 德尔菲法特征（匿名、多轮、收敛）</li>
 <li>[ ] 能算：总成本310万、年服务量2万单→单位成本155元/单</li>
-</ul></details></section><section class="card" id="s24"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day05 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s24"><h1>Day05 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day05 ｜ 2026年10月13日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第12章后半（服务运营提升、退役终止、持续改进）＋第13章人员管理</p>
@@ -5319,7 +5313,7 @@ B. procurement
 C. celebration
 D. recruitment</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s25"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day05 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s25"><h1>Day05 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day05 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -5632,7 +5626,7 @@ D. recruitment</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：今日主题（12章后半＋13章）共41题。柯氏四级、BSC四维、卡诺三需求、CSI七步第一步——四个"数字型知识点"若错，今晚必须抄写速记卡各三遍。</p></details></section><section class="card" id="s26"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day05 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：今日主题（12章后半＋13章）共41题。柯氏四级、BSC四维、卡诺三需求、CSI七步第一步——四个"数字型知识点"若错，今晚必须抄写速记卡各三遍。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s26"><h1>Day05 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day05 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -5774,7 +5768,7 @@ D. recruitment</p>
 </tr>
 </tbody>
 </table></div>
-<p>错题考点回读：卡诺三类需求（12.3.1）、流失率口径（13.3）、柯氏四级（13.5.3）、退役四方面（12.4）、CSI七步（12.5.5）。</p></details></section><section class="card" id="s27"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day05 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>错题考点回读：卡诺三类需求（12.3.1）、流失率口径（13.3）、柯氏四级（13.5.3）、退役四方面（12.4）、CSI七步（12.5.5）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s27"><h1>Day05 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day05 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要草稿</p>
 </blockquote>
@@ -5853,7 +5847,7 @@ D. recruitment</p>
 <p>三年服务期内，核心系统可用率从99.87%提升并稳定在99.96%，P1事件从年均5起降至0起，客户满意度从89分升至96分，服务两次获评集团"优秀供应商"。不足有二：一是改进初期我把重点全放在技术侧，忽视了客户体验类指标，第7个月客户在回顾会上直指"系统不坏但响应慢"，此后才将响应时效与沟通体验纳入改进主线——提醒我们改进目标必须与客户感知对齐；二是度量体系曾出现"指标好看但客户无感"的错位，如MTTR达标但客户等待的其实是修复确认，说明指标设计要贴近业务真实痛点。我的体会是：持续改进的灵魂是"测量—分析—改进—固化"的闭环，数据是靶心、PDCA是方法、固化是关键；改进不是运动式冲刺，而是融入日常运营的呼吸节律，机制建立后剩下的就是坚持。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>今天两题分别对应"人员"与"改进"两大论文高频方向，都建议保留提纲（新大纲后均属可考主题）。数字素材先定：团队规模、流失率前后、MTTR前后、满意度前后。</p></details></section><section class="card" id="s28"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day06 真题考点精讲：能力篇下（第14-17章）</h1>
+<p>今天两题分别对应"人员"与"改进"两大论文高频方向，都建议保留提纲（新大纲后均属可考主题）。数字素材先定：团队规模、流失率前后、MTTR前后、满意度前后。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s28"><h1>Day06 真题考点精讲：能力篇下（第14-17章）</h1>
 <blockquote>
 <p>Day06 ｜ 2026年10月14日（周三）｜ 距考试还有11天
 今日主题：规范与过程管理（14）、技术与研发管理（15）、资源与工具管理（16）、信息系统项目管理（17）</p>
@@ -5918,7 +5912,7 @@ D. recruitment</p>
 <li>[ ] 安全库存的依据（故障率、采购周期、服务水平）</li>
 <li>[ ] 十大知识领域能数出来；绩效域知道是8个</li>
 <li>[ ] 会算：10人团队沟通渠道数（45条）；概率30%×影响100万＝风险暴露30万</li>
-</ul></details></section><section class="card" id="s29"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day06 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s29"><h1>Day06 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day06 ｜ 2026年10月14日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第14-17章（规范与过程、技术与研发、资源与工具、项目管理）</p>
@@ -6304,7 +6298,7 @@ B. liabilities
 C. assets
 D. debts</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s30"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day06 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s30"><h1>Day06 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day06 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -6623,7 +6617,7 @@ D. debts</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：第14-17章共51题是今日主题。DMAIC、专利期限、绩效域个数、沟通渠道计算、风险四策略——错哪个抄哪个。本周（Day02-06）五套卷错题今天全部过一遍错题本，明天Day07进入全真模拟周。</p></details></section><section class="card" id="s31"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day06 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：第14-17章共51题是今日主题。DMAIC、专利期限、绩效域个数、沟通渠道计算、风险四策略——错哪个抄哪个。本周（Day02-06）五套卷错题今天全部过一遍错题本，明天Day07进入全真模拟周。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s31"><h1>Day06 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day06 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -6753,7 +6747,7 @@ CPI＝EV/AC＝120/130≈<strong>0.92＜1</strong>，每花1元仅产出约0.92�
 </tr>
 </tbody>
 </table></div>
-<p>错题考点回读：DMAIC（14.5）、知识流程环节（16.2.5）、安全库存三要素（16.2.6）、关键路径与总时差、挣值四指标（17.3.5）。</p></details></section><section class="card" id="s32"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day06 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>错题考点回读：DMAIC（14.5）、知识流程环节（16.2.5）、安全库存三要素（16.2.6）、关键路径与总时差、挣值四指标（17.3.5）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s32"><h1>Day06 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day06 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要草稿；建议本周内完成Day02-Day06中的1篇全文</p>
 </blockquote>
@@ -6832,7 +6826,7 @@ IT服务项目具有需求多变、干系人多、交付与运维衔接紧密等
 <p>三年运行后，知识库累计沉淀知识2300余项，知识复用率（重复故障直接引用既有方案处置的比例）达73%，新人独立上岗周期由6个月缩短至2个月，故障平均修复时间下降56%。不足有二：一是初期重技术知识、轻服务与流程类知识，工单沟通技巧、客户协调经验入库偏少，第二年才补齐；二是激励以精神与绩效为主、金额有限，个别资深工程师分享意愿仍需反复动员，说明知识贡献的考核权重还应提高。我的体会是：第一，知识管理的难点不在工具而在机制，"关单前回填"这类强制流程才是知识生产的源头活水；第二，知识必须"评价—更新—退出"闭环保鲜，否则可信度崩塌后就无人再用；第三，知识管理是典型的长期主义，其回报以效率与人效的形式缓慢释放，贵在坚持，日拱一卒，功不唐捐。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>Day06完成即第一周（Day01-Day06）全部主题精讲与套卷结束。今晚盘点：五天25份文件中所有错题是否已入错题本？明日（Day07）进入全真模拟阶段：侧重第1-10章的综合卷＋讲评，按考试节奏连做。</p></details></section><section class="card" id="s33"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day07 真题考点精讲：实践篇＋法律法规（第18-24章）</h1>
+<p>Day06完成即第一周（Day01-Day06）全部主题精讲与套卷结束。今晚盘点：五天25份文件中所有错题是否已入错题本？明日（Day07）进入全真模拟阶段：侧重第1-10章的综合卷＋讲评，按考试节奏连做。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s33"><h1>Day07 真题考点精讲：实践篇＋法律法规（第18-24章）</h1>
 <blockquote>
 <p>Day07 ｜ 2026年10月15日（周四）｜ 距考试还有10天
 今日主题：智慧城市/园区/数字乡村/数字化转型/智能制造/新型消费（第18-23章）＋法律法规和标准规范（第24章）</p>
@@ -6923,7 +6917,7 @@ IT服务项目具有需求多变、干系人多、交付与运维衔接紧密等
 <li>[ ] 敏感个人信息至少5类</li>
 <li>[ ] 标准分级顺序＋复审周期5年＋IDT含义</li>
 <li>[ ] 软著保护期两种口径</li>
-</ul></details></section><section class="card" id="s34"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day07 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s34"><h1>Day07 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day07 ｜ 2026年10月15日 ｜ 75道单项选择题，每题1分，限时150分钟
 侧重：第18-24章（六大实践规划＋法律法规和标准规范）</p>
@@ -7309,7 +7303,7 @@ B. menus
 C. prices
 D. levels</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s35"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day07 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s35"><h1>Day07 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day07 ｜ 满分75分，45分及格，目标55+</p>
 </blockquote>
@@ -7676,7 +7670,7 @@ D. levels</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘</strong>：今日主题（18-24章）共35题，是此前五天未重点覆盖的板块，务必确保失分≤10。法规13题中"必须招标项目、评标专家2/3、30日签约、敏感个人信息、标准分级"是多年高频点，错题请逐条背。</p></details></section><section class="card" id="s36"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day07 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘</strong>：今日主题（18-24章）共35题，是此前五天未重点覆盖的板块，务必确保失分≤10。法规13题中"必须招标项目、评标专家2/3、30日签约、敏感个人信息、标准分级"是多年高频点，错题请逐条背。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s36"><h1>Day07 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day07 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -7803,7 +7797,7 @@ D. levels</p>
 </tr>
 </tbody>
 </table></div>
-<p>错题考点回读：智慧城市规划要点与架构（18.3/18.4）、转型四焦点六要点（21.2/21.4）、必须招标情形与评标2/3规则、30日签约、分包限制（24.1.5）。</p></details></section><section class="card" id="s37"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day07 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p>错题考点回读：智慧城市规划要点与架构（18.3/18.4）、转型四焦点六要点（21.2/21.4）、必须招标情形与评标2/3规则、30日签约、分包限制（24.1.5）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s37"><h1>Day07 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day07 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要草稿</p>
 </blockquote>
@@ -7879,7 +7873,7 @@ D. levels</p>
 <p>规划实施18个月后：核心车间设备联网率85%，OEE从67%提升至76%；生产计划编制从3天缩短至5小时，插单响应从48小时缩至4小时；批次追溯实现秒级贯通，客户审核从"凑材料"变"实时演示"，两家客户将我方评级上调；交付准时率提升至96.5%。不足有二：基层员工初期有"机器人抢饭碗"的顾虑，个别老师傅抵触数据采集，我们通过"数字化绩效奖励"让数据带来工资透明提升才化解，说明变革管理与技术建设同等重要；设备联网改造中老设备协议不统一，改造成本超预算两成，提醒规划阶段要把存量设备的改造成本摸细。我的体会是：第一，智能制造规划必须评估先行，成熟度模型让"转什么"有了科学依据而非长官意志；第二，场景设计必须业务价值闭环，"技术名词的堆砌没有意义、跑赢成本的技术才有生命"；第三，分阶段递进是理性路径，"先规范后集成再优化"不能跳级；第四，人是最大的变量，组织变革与人才转型必须与技术路线同步规划、同步推进。</p>
 <hr />
 <h2>今日训练要求</h2>
-<p>今日起进入第二周。周末（Day08-Day10）为全真模拟连考日：请严格按"上午8:30-12:30综合知识＋案例连做"的节奏执行，把生物钟调到考试时间。</p></details></section><section class="card" id="s38"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day08 真题考点精讲：全真模拟一·考前执行指南＋第1-10章易错点串讲</h1>
+<p>今日起进入第二周。周末（Day08-Day10）为全真模拟连考日：请严格按"上午8:30-12:30综合知识＋案例连做"的节奏执行，把生物钟调到考试时间。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s38"><h1>Day08 真题考点精讲：全真模拟一·考前执行指南＋第1-10章易错点串讲</h1>
 <blockquote>
 <p>Day08 ｜ 2026年10月16日（周五）｜ 距考试还有9天
 今日模式：<strong>全真模拟日</strong>——上午8:30-10:40综合知识75题（150分钟严格计时）→10:50-12:20案例分析3题（90分钟）→下午或晚间对答案复盘→论文2选1列提纲
@@ -8053,7 +8047,7 @@ D. levels</p>
 <li>[ ] 案例得分记录：____/75（目标≥45）</li>
 <li>[ ] 全部错题已标注A/B/C归类</li>
 <li>[ ] 本日新增错题已录入错题本.md</li>
-</ul></details></section><section class="card" id="s39"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day08 全真模拟一 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s39"><h1>Day08 全真模拟一 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day08 ｜ 2026年10月16日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 侧重：第1-10章（基础篇＋方法篇）——请按真实考试纪律执行</p>
@@ -8439,7 +8433,7 @@ B. entertainment
 C. logistics
 D. marketing</p>
 <hr />
-<p>（试题完 ｜ 到点即停，先自评再翻答案）</p></details></section><section class="card" id="s40"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day08 全真模拟一 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 到点即停，先自评再翻答案）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s40"><h1>Day08 全真模拟一 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day08 ｜ 满分75分，45分及格，全真模拟目标55+</p>
 </blockquote>
@@ -8776,7 +8770,7 @@ D. marketing</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>全真复盘（务必执行）</strong>：得分<strong><em>_；错题</em></strong>_道，其中A类（概念不清）<strong><em>_道、B类（概念混淆）</em></strong>_道、C类（审题）____道。A/B类按题号回教材；基础篇＋方法篇共58题是本卷重心，失分＞14道说明第一周主题日（Day02/Day03）内容需回炉——今晚重做那两天的错题。</p></details></section><section class="card" id="s41"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day08 全真模拟一 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>全真复盘（务必执行）</strong>：得分<strong><em>_；错题</em></strong>_道，其中A类（概念不清）<strong><em>_道、B类（概念混淆）</em></strong>_道、C类（审题）____道。A/B类按题号回教材；基础篇＋方法篇共58题是本卷重心，失分＞14道说明第一周主题日（Day02/Day03）内容需回炉——今晚重做那两天的错题。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s41"><h1>Day08 全真模拟一 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day08 ｜ 共3题，每题25分，限时90分钟 ｜ 场景侧重：基础篇＋方法篇</p>
 </blockquote>
@@ -8904,7 +8898,7 @@ D. marketing</p>
 </tr>
 </tbody>
 </table></div>
-<p>计算题四道（容量整合、PUE节电）请完整重算一遍写入错题本。今晚把Day08综合知识＋案例的全部错题归档完毕。</p></details></section><section class="card" id="s42"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day08 全真模拟一 · 科目三：论文（题目与写作指导）</h1>
+<p>计算题四道（容量整合、PUE节电）请完整重算一遍写入错题本。今晚把Day08综合知识＋案例的全部错题归档完毕。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s42"><h1>Day08 全真模拟一 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day08 ｜ 2题选1 ｜ 全真模拟日：限时60分钟完成提纲＋摘要；本周日（Day10）选一篇写全文</p>
 </blockquote>
@@ -8989,7 +8983,7 @@ IT战略规划将企业战略转化为IT建设蓝图。总体架构设计（业�
 <li>记录今日三科得分：综合<strong><em>_/75、案例</em></strong>_/75、论文（提纲完成度自评）；</li>
 <li>错题全部入错题本并标A/B/C；</li>
 <li>明日（Day09）全真模拟二：侧重第11-17章能力篇——今晚把Day04-06三天的错题先过一遍。</li>
-</ol></details></section><section class="card" id="s43"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day09 真题考点精讲：全真模拟二·能力篇（第11-17章）易错点串讲</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s43"><h1>Day09 真题考点精讲：全真模拟二·能力篇（第11-17章）易错点串讲</h1>
 <blockquote>
 <p>Day09 ｜ 2026年10月17日（周六）｜ 距考试还有8天
 今日模式：<strong>全真模拟日</strong>（流程同Day08：8:30综合知识150分钟→案例90分钟→晚间复盘＋论文提纲）
@@ -9197,7 +9191,7 @@ IT战略规划将企业战略转化为IT建设蓝图。总体架构设计（业�
 <li>[ ] 综合知识得分<strong><em>_/75（第11-17章板块</em></strong>_/56）</li>
 <li>[ ] 案例得分____/75</li>
 <li>[ ] 错题A/B/C归类完毕并入错题本</li>
-</ul></details></section><section class="card" id="s44"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day09 全真模拟二 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s44"><h1>Day09 全真模拟二 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day09 ｜ 2026年10月17日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 侧重：第11-17章（能力篇）</p>
@@ -9583,7 +9577,7 @@ B. retirement
 C. marketing
 D. decoration</p>
 <hr />
-<p>（试题完 ｜ 到点即停）</p></details></section><section class="card" id="s45"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day09 全真模拟二 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 到点即停）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s45"><h1>Day09 全真模拟二 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day09 ｜ 满分75分，45分及格，全真模拟目标55+</p>
 </blockquote>
@@ -9902,7 +9896,7 @@ D. decoration</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>全真复盘</strong>：得分<strong><em>_；第11-17章板块</em></strong>_/59（本卷该板块实为59题）。已知错误与已知风险（58题应急/管理储备、17题已知错误、6题应用控制）是三大最易混点，错题今日必须抄写对照。</p></details></section><section class="card" id="s46"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day09 全真模拟二 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>全真复盘</strong>：得分<strong><em>_；第11-17章板块</em></strong>_/59（本卷该板块实为59题）。已知错误与已知风险（58题应急/管理储备、17题已知错误、6题应用控制）是三大最易混点，错题今日必须抄写对照。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s46"><h1>Day09 全真模拟二 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day09 ｜ 共3题，每题25分，限时90分钟 ｜ 场景侧重：能力篇（治理/服务/人员/项目）</p>
 </blockquote>
@@ -10028,7 +10022,7 @@ D. decoration</p>
 </tr>
 </tbody>
 </table></div>
-<p>计算题（人数×2、关键路径、成本利润）全部重算入错题本。试题三第3问的"亏损判断"是新题路：<strong>计算后必须给管理结论</strong>，真题近年常考。</p></details></section><section class="card" id="s47"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day09 全真模拟二 · 科目三：论文（题目与写作指导）</h1>
+<p>计算题（人数×2、关键路径、成本利润）全部重算入错题本。试题三第3问的"亏损判断"是新题路：<strong>计算后必须给管理结论</strong>，真题近年常考。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s47"><h1>Day09 全真模拟二 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day09 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要（能力篇双预测题）</p>
 </blockquote>
@@ -10106,7 +10100,7 @@ D. decoration</p>
 <p>三年下来，客户满意度从89分提升至96分，投诉量年均下降62%，客户在我方续约评估中给出"强烈推荐"评级，追加了安全运维项目，双方共建了联合创新小组——关系从交易走向伙伴。不足有二：一是初期我过度聚焦高层关系，对操作层用户的声音重视不足，一次满意度调查中车间用户"打印机坏了三天没人理"的抱怨让我意识到服务的最终感知在末端用户，随后将桌面支持纳入重点改进；二是曾有一次季度会前指标未达预期，我一度犹豫是否"美化数据"，最终选择如实呈现并给出整改计划——事实证明透明比完美更能赢得尊重。我的体会是：第一，客户关系管理的本质是信任管理，而信任来自持续的承诺兑现与坏消息的坦诚；第二，卡诺模型的分类施策是资源有限时满意度提升的最优解——基本型守住底线、期望型持续投入、兴奋型重点制造；第三，满意度是结果不是目标，把服务做扎实，分数自然到来。</p>
 <hr />
 <h2>今日收尾动作</h2>
-<p>记录三科得分；错题归类A/B/C入错题本。明日（Day10）全真模拟三为<strong>全章均衡卷</strong>，今晚把Day01-Day09九套卷的错题本整体翻一遍，标出"错两次以上"的考点——这些就是明天复盘的重点对象。</p></details></section><section class="card" id="s48"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day10 真题考点精讲：全真模拟三·错题大数据复盘法＋考前9天考点热力图</h1>
+<p>记录三科得分；错题归类A/B/C入错题本。明日（Day10）全真模拟三为<strong>全章均衡卷</strong>，今晚把Day01-Day09九套卷的错题本整体翻一遍，标出"错两次以上"的考点——这些就是明天复盘的重点对象。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s48"><h1>Day10 真题考点精讲：全真模拟三·错题大数据复盘法＋考前9天考点热力图</h1>
 <blockquote>
 <p>Day10 ｜ 2026年10月18日（周日）｜ 距考试还有7天
 今日模式：<strong>全真模拟日（全章均衡卷）</strong>——完全仿真真题结构：基础篇约16题、方法篇21题、能力篇28题、实践法规6题、英语4题</p>
@@ -10215,7 +10209,7 @@ D. decoration</p>
 <li>[ ] 错≥3次考点已在模拟前重读</li>
 <li>[ ] 三科得分记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 新错题入本（明日起错题本只增不删，考前一天只看错题本）</li>
-</ul></details></section><section class="card" id="s49"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day10 全真模拟三 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s49"><h1>Day10 全真模拟三 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day10 ｜ 2026年10月18日 ｜ 75道单项选择题，每题1分，<strong>严格限时150分钟</strong>
 结构完全仿真：基础篇16＋方法篇21＋能力篇28＋实践法规6＋英语4</p>
@@ -10601,7 +10595,7 @@ B. 单点防御
 C. 纵深防御
 D. 边界放弃</p>
 <hr />
-<p>（试题完 ｜ 到点即停，先自评）</p></details></section><section class="card" id="s50"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day10 全真模拟三 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 到点即停，先自评）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s50"><h1>Day10 全真模拟三 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day10 ｜ 满分75分，45分及格，全真目标55＋（本卷为考前结构完全仿真卷）</p>
 </blockquote>
@@ -10985,7 +10979,7 @@ D. 边界放弃</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>复盘（今晚必做）</strong>：对照昨日个人热力图——今天在"你最热的3个考点"上是否仍失分？仍失分者列为<strong>红色考点</strong>，明日案例专项日回读教材原文＋错题重做，考前不再做新卷刷这些点。</p></details></section><section class="card" id="s51"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day10 全真模拟三 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>复盘（今晚必做）</strong>：对照昨日个人热力图——今天在"你最热的3个考点"上是否仍失分？仍失分者列为<strong>红色考点</strong>，明日案例专项日回读教材原文＋错题重做，考前不再做新卷刷这些点。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s51"><h1>Day10 全真模拟三 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day10 ｜ 共3题，每题25分，限时90分钟 ｜ 全章混合场景，训练每题25分钟节奏</p>
 </blockquote>
@@ -11111,7 +11105,7 @@ D. 边界放弃</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题覆盖规划方法＋服务管理＋治理项目，正是真题案例的三大出题面。今晚完成论文提纲；明日（Day11）进入<strong>案例专项日</strong>：计算题大全与答题模板特训。</p></details></section><section class="card" id="s52"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day10 全真模拟三 · 科目三：论文（题目与写作指导）</h1>
+<p>三题覆盖规划方法＋服务管理＋治理项目，正是真题案例的三大出题面。今晚完成论文提纲；明日（Day11）进入<strong>案例专项日</strong>：计算题大全与答题模板特训。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s52"><h1>Day10 全真模拟三 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day10 ｜ 2题选1 ｜ 今日：<strong>必写1篇全文</strong>（限时120分钟）——第一篇真正意义上的全文实战</p>
 </blockquote>
@@ -11183,7 +11177,7 @@ D. 边界放弃</p>
 <p>扎实的需求分析带来了直接回报：规划蓝图一次通过董事会评审，评审意见特别肯定"需求依据充分"；一期12个系统上线后，因需求理解偏差导致的返工极少，用户需求变更率仅6%，远低于同类项目20%以上的常见水平；需求分析识别的"跨部门数据共享"作为一号需求，其成果（经营报表7天→1天）成为集团上下对规划价值的最大共识。不足有二：一是需求获取对"沉默的大多数"覆盖不够，一线操作工的声音主要通过问卷获得，深度不如管理层需求，上线后个别操作细节仍需调整——问卷的局限要用更多的现场观察弥补；二是非功能需求（性能指标、安全等级）初期被轻视，靠评审会上的专家提醒才补齐，说明需求分析容易"重功能、轻质量属性"。我的体会是：第一，需求分析是"倾听的技术"，三层覆盖缺一不可——高层给方向、中层给流程、基层给细节；第二，分析环节的价值在于"从说的看到想要的"，用户说"要个报表"，真实需求可能是"要实时决策依据"，需求背后的需求才是规划依据；第三，需求必须经过正式确认与变更管理，"共识基线"是规划公信力的基石。</p>
 <hr />
 <h2>今日收尾动作</h2>
-<p>今晚写完的全文请自查五项：①摘要280-330字；②总字数2400-2700；③每段有数据；④三问全覆盖；⑤结尾有不足与体会。写完后<strong>朗读一遍</strong>——机考打字时代更要练"出口成章"。</p></details></section><section class="card" id="s53"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day11 真题考点精讲：案例计算题专项突破＋四题型答题模板</h1>
+<p>今晚写完的全文请自查五项：①摘要280-330字；②总字数2400-2700；③每段有数据；④三问全覆盖；⑤结尾有不足与体会。写完后<strong>朗读一遍</strong>——机考打字时代更要练"出口成章"。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s53"><h1>Day11 真题考点精讲：案例计算题专项突破＋四题型答题模板</h1>
 <blockquote>
 <p>Day11 ｜ 2026年10月19日（周一）｜ 距考试还有6天
 今日模式：<strong>案例专项日</strong>——上午做今日综合知识卷（含15道计算型选择题）→下午集中攻克案例计算专项3题→晚间论文提纲＋错题</p>
@@ -11276,7 +11270,7 @@ D. 边界放弃</p>
 <li>[ ] 九大公式可默写（合上本子测）</li>
 <li>[ ] 综合知识得分<strong><em>_/75；案例得分</em></strong>_/75</li>
 <li>[ ] 计算类错题全部归入"公式错"或"审题错"</li>
-</ul></details></section><section class="card" id="s54"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day11 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s54"><h1>Day11 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day11 ｜ 2026年10月19日 ｜ 75道单项选择题，每题1分，限时150分钟
 特色：第1-15题为计算/推演专项（今日主题），其余全章均衡</p>
@@ -11662,7 +11656,7 @@ B. under
 C. over
 D. beside</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s55"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day11 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s55"><h1>Day11 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day11 ｜ 满分75分，45分及格，目标55＋</p>
 </blockquote>
@@ -11909,7 +11903,7 @@ D. beside</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>特别复盘（第11、15题）</strong>：这两题是刻意设置的"计算结果异常/不在选项"警惕题——第11题严谨计算为"关键路径27天、C总时差0（无此选项组合）"；第15题甲乙各82分应选C。考场法则：<strong>算完再看选项，结果无解时先重读题，仍无解则选确定正确的部分（如最长路径）</strong>。你的真实水平判断请以第1-10、12-14题为准。</p></details></section><section class="card" id="s56"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day11 模拟卷 · 科目二：案例分析·计算专项（试题与参考答案）</h1>
+<p><strong>特别复盘（第11、15题）</strong>：这两题是刻意设置的"计算结果异常/不在选项"警惕题——第11题严谨计算为"关键路径27天、C总时差0（无此选项组合）"；第15题甲乙各82分应选C。考场法则：<strong>算完再看选项，结果无解时先重读题，仍无解则选确定正确的部分（如最长路径）</strong>。你的真实水平判断请以第1-10、12-14题为准。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s56"><h1>Day11 模拟卷 · 科目二：案例分析·计算专项（试题与参考答案）</h1>
 <blockquote>
 <p>Day11 ｜ 共3题，每题25分，限时90分钟 ｜ 三题全部为计算型案例（今日专项）</p>
 </blockquote>
@@ -12036,7 +12030,7 @@ A需求与数据标准（3，起点）；B平台搭建（6，紧前A）；C数�
 </tr>
 </tbody>
 </table></div>
-<p><strong>错题归因必须二选一</strong>：公式错（回精讲第一部分重默写）／审题错（口径、单位、取整时机）。明日（Day12）论文专项日：白天正常一套卷，晚间集中攻论文。</p></details></section><section class="card" id="s57"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day11 模拟卷 · 科目三：论文（题目与写作指导）</h1>
+<p><strong>错题归因必须二选一</strong>：公式错（回精讲第一部分重默写）／审题错（口径、单位、取整时机）。明日（Day12）论文专项日：白天正常一套卷，晚间集中攻论文。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s57"><h1>Day11 模拟卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day11 ｜ 2题选1 ｜ 今日：任选1题写详细提纲＋摘要（成本与容量是案例计算的高频论文化主题）</p>
 </blockquote>
@@ -12115,7 +12109,7 @@ A需求与数据标准（3，起点）；B平台搭建（6，紧前A）；C数�
 <p>调优解不了的，走规范化扩容：由容量预测触发（提前量原则——设备到货实施需45天，故预测必须覆盖至少两季度）、方案评审（技术方案＋投资估算＋业务影响评估）、窗口实施（在业务低峰周末，含回退预案）、验证关闭四步。两年运行下来，容量管理成效显著：年终决算、季末结息等关键时点连续两年零容量事故；手机银行大促成功支撑3.5倍并发（通过临时弹性扩容＋排队限流组合实现）；容量预警平均提前期达58天，从容安排扩容；核心系统扩容次数从每年4次降为2次（调优替代）。不足与体会：一是容量管理初期阻力在"数据口径"，监控采集的CPU利用率因虚拟化超分而失真，我们花了一个季度统一采集标准——可信数据是容量管理的地基；二是业务部门的需求预测最难，手机银行的爆发增长曾超出我们模型估计，靠与业务部门的季度对齐机制修正。我的体会是：容量管理的本质是"在成本与风险之间找平衡"——100%的余量是浪费，30%的余量是安全带；管理闭环的钥匙在"预测触发行动"，没有触发机制的容量监控只是报表；而调优优先、扩容兜底的次序，是专业与平庸的分界线。</p>
 <hr />
 <h2>今日收尾动作</h2>
-<p>两题提纲均保存（明日论文日择一成文）。今晚把案例计算九公式再默写一遍；明日流程：上午综合知识卷→下午案例卷→<strong>晚间120分钟论文全文实战</strong>。</p></details></section><section class="card" id="s58"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day12 真题考点精讲：论文写作全攻略（今晚120分钟全文实战）</h1>
+<p>两题提纲均保存（明日论文日择一成文）。今晚把案例计算九公式再默写一遍；明日流程：上午综合知识卷→下午案例卷→<strong>晚间120分钟论文全文实战</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s58"><h1>Day12 真题考点精讲：论文写作全攻略（今晚120分钟全文实战）</h1>
 <blockquote>
 <p>Day12 ｜ 2026年10月20日（周二）｜ 距考试还有5天
 今日模式：<strong>论文专项日</strong>——上午综合知识卷→下午案例卷→<strong>晚间120分钟限时写1篇完整论文</strong>（机考打字）</p>
@@ -12219,7 +12213,7 @@ A需求与数据标准（3，起点）；B平台搭建（6，紧前A）；C数�
 <li>[ ] 今日三科得分记录齐全</li>
 <li>[ ] 论文全文完成并保存（电子版留档，考前一天朗读一遍）</li>
 <li>[ ] 明日（Day13）为终极全真模拟日：严格按10月25日时刻表执行</li>
-</ul></details></section><section class="card" id="s59"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day12 模拟卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s59"><h1>Day12 模拟卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day12 ｜ 2026年10月20日 ｜ 75道单项选择题，每题1分，限时150分钟（上午完成，为晚间论文留足精力）</p>
 </blockquote>
@@ -12604,7 +12598,7 @@ B. tariff
 C. talent
 D. title</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s60"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day12 模拟卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s60"><h1>Day12 模拟卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day12 ｜ 满分75分，45分及格，目标55＋</p>
 </blockquote>
@@ -12971,7 +12965,7 @@ D. title</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>提醒</strong>：今晚的重头戏是<strong>120分钟论文全文</strong>（见05文件），综合知识复盘控制在40分钟内完成。</p></details></section><section class="card" id="s61"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day12 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>提醒</strong>：今晚的重头戏是<strong>120分钟论文全文</strong>（见05文件），综合知识复盘控制在40分钟内完成。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s61"><h1>Day12 模拟卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day12 ｜ 共3题，每题25分，限时90分钟（下午完成，晚间留给论文）</p>
 </blockquote>
@@ -13097,7 +13091,7 @@ D. title</p>
 </tr>
 </tbody>
 </table></div>
-<p>今夜重头戏：论文120分钟全文实战（见05文件）。案例复盘明天再看也来得及——<strong>今晚论文优先</strong>。</p></details></section><section class="card" id="s62"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day12 模拟卷 · 科目三：论文（题目与写作指导·今晚实战）</h1>
+<p>今夜重头戏：论文120分钟全文实战（见05文件）。案例复盘明天再看也来得及——<strong>今晚论文优先</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s62"><h1>Day12 模拟卷 · 科目三：论文（题目与写作指导·今晚实战）</h1>
 <blockquote>
 <p>Day12 ｜ 2题选1 ｜ <strong>今晚120分钟限时写完整全文</strong>（明日起不再写全文，只背框架）</p>
 </blockquote>
@@ -13172,7 +13166,7 @@ D. title</p>
 <li><strong>保存全文</strong>——考前一天（10.22晚）只朗读此篇＋背两个项目素材包。</li>
 </ol>
 <h2>本轮（Day07-Day12）收官说明</h2>
-<p>至此Day07-Day12全部生成完毕。Day13（10.21终极全真模拟）、Day14（10.22错题回炉＋速记）、Day15（10.23考前轻量日）将由每日自动化于10.10-10.12逐日自动补齐，结构与本卷完全一致。Day16-Day20因已越过考试日（10月25日）无备考日程意义，如需"考前加练卷"（不绑日期、供状态好多刷），请回复"继续生成加练卷"。</p></details></section><section class="card" id="s63"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day13 真题考点精讲：终极全真模拟·考前 48 小时行动清单</h1>
+<p>至此Day07-Day12全部生成完毕。Day13（10.21终极全真模拟）、Day14（10.22错题回炉＋速记）、Day15（10.23考前轻量日）将由每日自动化于10.10-10.12逐日自动补齐，结构与本卷完全一致。Day16-Day20因已越过考试日（10月25日）无备考日程意义，如需"考前加练卷"（不绑日期、供状态好多刷），请回复"继续生成加练卷"。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s63"><h1>Day13 真题考点精讲：终极全真模拟·考前 48 小时行动清单</h1>
 <blockquote>
 <p>Day13 ｜ 2026年10月21日（周三）｜ 距考试还有4天
 今日模式：<strong>终极全真模拟</strong>——完全按 10 月 25 日（周日）考试时刻表执行，这是考前的"全流程彩排"
@@ -13227,7 +13221,7 @@ D. title</p>
 <li>[ ] 三科严格按时刻表完成并记录分数：综合<strong><em>_/75、案例</em></strong>_/75、论文（完整度自评）____</li>
 <li>[ ] 全部错题已标注 A/B/C 归类</li>
 <li>[ ] 考前 20 速记点能 10 分钟内过完</li>
-</ul></details></section><section class="card" id="s64"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day13 终极全真模拟 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s64"><h1>Day13 终极全真模拟 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day13 ｜ 2026年10月21日 ｜ <strong>严格 8:30 开考，150 分钟，到点交卷</strong>
 结构仿真：基础篇16＋方法篇21＋能力篇27＋实践法规6＋英语4＋综合1</p>
@@ -13613,7 +13607,7 @@ B. recruitment
 C. celebration
 D. advertising</p>
 <hr />
-<p>（试题完 ｜ 150 分钟到点立即停笔）</p></details></section><section class="card" id="s65"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day13 终极全真模拟 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 150 分钟到点立即停笔）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s65"><h1>Day13 终极全真模拟 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day13 ｜ 满分75分，45分及格 ｜ 终极模拟目标 58+（考前最后一次校准）</p>
 </blockquote>
@@ -13983,7 +13977,7 @@ D. advertising</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>分数段校准</strong>：≥60＝状态极佳按计划走；50-59＝达标，错题考点明日回炉；45-49＝达标边缘，明日全天只攻错题本；＜45＝调整心态，明天按 Day14 速记表把高频 20 点吃透——考前抓能拿的分，不追求满分。</p></details></section><section class="card" id="s66"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day13 终极全真模拟 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>分数段校准</strong>：≥60＝状态极佳按计划走；50-59＝达标，错题考点明日回炉；45-49＝达标边缘，明日全天只攻错题本；＜45＝调整心态，明天按 Day14 速记表把高频 20 点吃透——考前抓能拿的分，不追求满分。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s66"><h1>Day13 终极全真模拟 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day13 ｜ 共3题，每题25分 ｜ 10:50-12:20 连考（与综合知识间隔10分钟）
 按真实考试纪律：先通读三题、由易到难、每题25分钟＋15分钟机动</p>
@@ -14106,7 +14100,7 @@ D. advertising</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>下午论文（14:30-16:30）</strong>：打开《05-论文》按真实节奏完成——审题选题 10 分钟→提纲 25 分钟→成文 75 分钟→检查 10 分钟。今日之后不再写全文，只背框架。</p></details></section><section class="card" id="s67"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day13 终极全真模拟 · 科目三：论文（题目与写作指导）</h1>
+<p><strong>下午论文（14:30-16:30）</strong>：打开《05-论文》按真实节奏完成——审题选题 10 分钟→提纲 25 分钟→成文 75 分钟→检查 10 分钟。今日之后不再写全文，只背框架。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s67"><h1>Day13 终极全真模拟 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day13 ｜ 14:30-16:30 ｜ 2题选1 ｜ <strong>最后一篇限时全文</strong>：审题10分钟→提纲25分钟→成文75分钟→检查10分钟</p>
 </blockquote>
@@ -14186,7 +14180,7 @@ IT 服务运行中风险无处不在。建立覆盖识别、评估、应对与�
 <li>记录三科成绩，与 Day10 全真三对比波动；</li>
 <li>错题 A/B/C 归档（≤40分钟）；</li>
 <li>23:00 前入睡——明天 Day14 只做回炉与背诵，不再做新卷。</li>
-</ol></details></section><section class="card" id="s68"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day14 真题考点精讲：考前总回炉·全书速记总表＋论文背诵框架</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s68"><h1>Day14 真题考点精讲：考前总回炉·全书速记总表＋论文背诵框架</h1>
 <blockquote>
 <p>Day14 ｜ 2026年10月22日（周四）｜ 距考试还有3天
 今日模式：<strong>回炉日</strong>——不再学新内容；上午做最后一套"高频热身卷"（75题全部为高频考点，快做）→ 下午错题本总回炉 → 晚间背诵速记表＋论文框架 → 23:00 前入睡</p>
@@ -14248,7 +14242,7 @@ IT 服务运行中风险无处不在。建立覆盖识别、评估、应对与�
 <li>[ ] 错题本全部过完，错两次以上的考点重做原题</li>
 <li>[ ] 两套论文素材数字能默写</li>
 <li>[ ] 考场物品清单核对完毕</li>
-</ul></details></section><section class="card" id="s69"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day14 高频热身卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s69"><h1>Day14 高频热身卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day14 ｜ 2026年10月22日 ｜ 75道高频考点快测卷，限时100分钟（比正式考试快，保持手感）
 全部题目来自历年最高频考点域，做完立即对答案——这是考前最后一份新题</p>
@@ -14631,7 +14625,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 </ol>
 </blockquote>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s70"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day14 高频热身卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s70"><h1>Day14 高频热身卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day14 ｜ 本卷全部为最高频考点，错题＝考前必须最后清除的点</p>
 </blockquote>
@@ -14849,7 +14843,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 <strong>75. A</strong>【英语】SMART 之 T＝time-bound。</p>
 <h2>三、热身卷校准</h2>
 <p>本卷为高频点全集：得分 <strong>≥65</strong>＝可安心赴考；<strong>55-64</strong>＝错题逐点回速记表背诵；<strong>＜55</strong>＝把错题对应章节的速记卡今晚重抄一遍，明早再测一次（Day15 还有热身机会）。</p>
-<p><strong>下午安排</strong>：错题本总回炉（全部 A/B/C 分类重过）→ 晚间：速记总表两遍＋论文素材背诵 → 核对考场物品 → 23:00 睡。</p></details></section><section class="card" id="s71"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day14 高频热身 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>下午安排</strong>：错题本总回炉（全部 A/B/C 分类重过）→ 晚间：速记总表两遍＋论文素材背诵 → 核对考场物品 → 23:00 睡。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s71"><h1>Day14 高频热身 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day14 ｜ 3题热身，每题20分钟（比正式考试快），保持手感不疲劳</p>
 </blockquote>
@@ -14939,7 +14933,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 措施（任三项）：①关键路径赶工（加资源于瓶颈活动——依据 SPI 滞后主因）；②快速跟进（并行非依赖任务，接受返工风险）；③范围分期交付（先核心后增强，与客户协商）；④争取外援专家/外包补充（每项措施1分＋理由约0.3分）。</p>
 <hr />
 <h2>今日收官</h2>
-<p>案例热身结束。今晚只做：速记总表两遍＋论文素材背诵＋物品核对。<strong>不再做任何新题</strong>——让大脑保持"饥饿感"进入明天轻量日。</p></details></section><section class="card" id="s72"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day14 论文背诵框架（考前最后一课·不写全文）</h1>
+<p>案例热身结束。今晚只做：速记总表两遍＋论文素材背诵＋物品核对。<strong>不再做任何新题</strong>——让大脑保持"饥饿感"进入明天轻量日。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s72"><h1>Day14 论文背诵框架（考前最后一课·不写全文）</h1>
 <blockquote>
 <p>Day14 ｜ 晚间使用 ｜ 任务：把两个素材包＋十个主题骨架背到"能口述"</p>
 </blockquote>
@@ -14986,7 +14980,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 </ul>
 <blockquote>
 <p>记住：你已经完成 14 天、超过 1000 题的系统训练。考场上唯一的任务就是<strong>把会做的题做对</strong>。</p>
-</blockquote></details></section><section class="card" id="s73"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day15 考前轻量日·最后一课：赴考指南</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s73"><h1>Day15 考前轻量日·最后一课：赴考指南</h1>
 <blockquote>
 <p>Day15 ｜ 2026年10月23日（周五）｜ 距考试还有2天（10.24 休整、10.25 考试）
 今日原则：<strong>只看不学、只背不钻</strong>——总学习时长控制在 3 小时内，重点是把状态调整到考试频道</p>
@@ -15043,7 +15037,7 @@ A. time-bound　B. tiny　C. trendy　D. total</p>
 <strong>10.25（周日）</strong>：07:00 起床；早餐七分饱；提前 40 分钟到场；<strong>08:20 入座，深呼吸三次，开考</strong>。</p>
 <blockquote>
 <p>十五天，你把一本 800 页的教程拆成了 1100 道题、120 个速记点、10 套论文框架。现在，去把证书带回来。祝考试顺利，一次通过！</p>
-</blockquote></details></section><section class="card" id="s74"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day15 考前热身卷 · 科目一：综合知识（试题）</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s74"><h1>Day15 考前热身卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day15 ｜ 2026年10月23日 ｜ 30 分钟快测（20题核心判断＋高频 55 题），只求保持手感
 本卷为轻量热身，不设严格计时压力——错题只看解析不再扩展</p>
@@ -15350,7 +15344,7 @@ A. verified　B. ignored　C. hidden　D. sold</p>
 </ol>
 </blockquote>
 <hr />
-<p>（试题完 ｜ 只对答案，不扩散——今晚十一点前入睡）</p></details></section><section class="card" id="s75"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day15 考前热身卷 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 只对答案，不扩散——今晚十一点前入睡）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s75"><h1>Day15 考前热身卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day15 ｜ 只对答案，错题标记后进入速记表对应条目背诵，不再展开</p>
 </blockquote>
@@ -15540,7 +15534,7 @@ A. verified　B. ignored　C. hidden　D. sold</p>
 <p>本卷正确率 ≥52/60＝状态就绪，安心赴考；＜45/60＝今晚只把上表 12 个易错点各读三遍即可，<strong>不再做任何题</strong>。</p>
 <blockquote>
 <p>最后一步：合上电脑，检查证件，早睡。10 月 25 日 8:30，考场上见真章。祝旗开得胜！</p>
-</blockquote></details></section><section class="card" id="s76"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day15 考前热身 · 科目二：案例分析（试题与参考答案）</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s76"><h1>Day15 考前热身 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day15 ｜ 只做一题热身（25 分钟），另两题仅通读场景与问题、口述答题思路</p>
 </blockquote>
@@ -15582,7 +15576,7 @@ A. verified　B. ignored　C. hidden　D. sold</p>
 <h2>考前最后提醒（案例）</h2>
 <ol>
 <li><strong>先看问题再读材料</strong>；2. <strong>按点编号</strong>；3. 填空写教材原文；4. 计算写公式；5. <strong>绝不空题</strong>；6. 每题 25 分钟收口。</li>
-</ol></details></section><section class="card" id="s77"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day15 考前轻量 · 科目三：论文（考前最终版框架卡）</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s77"><h1>Day15 考前轻量 · 科目三：论文（考前最终版框架卡）</h1>
 <blockquote>
 <p>Day15 ｜ 不写新题 ｜ 任务：30 分钟把"考场操作卡"与"万能模板"最后过一遍，然后合上所有资料</p>
 </blockquote>
@@ -15627,7 +15621,7 @@ A. verified　B. ignored　C. hidden　D. sold</p>
 Day01 摸底 → Day02-07 主题攻坚 → Day08-13 六轮全真 → Day14 回炉 → Day15 轻量收束。
 1100+ 道题、120+ 个速记点、10 套论文框架已内化为你的一部分。</p>
 <p>10 月 25 日，走进考场，坐下来，深呼吸——然后把它做完。<strong>一次通过，副高到手。</strong></p>
-</blockquote></details></section><section class="card" id="s78"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day16 强化加练卷 · 考点精讲：全真模拟五·综合复盘指南</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s78"><h1>Day16 强化加练卷 · 考点精讲：全真模拟五·综合复盘指南</h1>
 <blockquote>
 <p>Day16 ｜ 强化加练卷（不绑定日期：用于二次刷题、状态加练或下轮备考）
 定位：全真模拟五——继 Day08/09/10/13 之后的第五轮整卷实战
@@ -15746,7 +15740,7 @@ Day01 摸底 → Day02-07 主题攻坚 → Day08-13 六轮全真 → Day14 回�
 <li>[ ] 三科限时完成并记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 错题与四轮全真题合并去重</li>
 <li>[ ] "最终错题清单"已建立</li>
-</ul></details></section><section class="card" id="s79"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day16 强化加练 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s79"><h1>Day16 强化加练 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day16 ｜ 强化加练卷 ｜ 75道单项选择题，每题1分，限时150分钟</p>
 </blockquote>
@@ -16127,7 +16121,7 @@ B. 只做桌面
 C. 桌面推演→切换演练→实战演练，逐级加深
 D. 只做实战</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s80"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day16 强化加练 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s80"><h1>Day16 强化加练 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day16 ｜ 满分75分，45分及格，强化目标 58+</p>
 </blockquote>
@@ -16488,7 +16482,7 @@ D. 只做实战</p>
 </tr>
 </tbody>
 </table></div>
-<p>本卷为强化卷，含较多工程实践延伸考点（湖仓一体、混沌工程、ADR、告警风暴）——这些在第 8/10/16 章工程语境中均有对应，属"理解型"而非"背诵型"；错题回到精讲对照表定位其源考点即可。</p></details></section><section class="card" id="s81"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day16 强化加练 · 科目二：案例分析（试题与参考答案）</h1>
+<p>本卷为强化卷，含较多工程实践延伸考点（湖仓一体、混沌工程、ADR、告警风暴）——这些在第 8/10/16 章工程语境中均有对应，属"理解型"而非"背诵型"；错题回到精讲对照表定位其源考点即可。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s81"><h1>Day16 强化加练 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day16 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -16614,7 +16608,7 @@ D. 只做实战</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题分别对应"方案设计测算""监控告警治理""架构评审"——均为案例真题高频命题面。论文（05）今日可只列提纲。</p></details></section><section class="card" id="s82"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day16 强化加练 · 科目三：论文（题目与写作指导）</h1>
+<p>三题分别对应"方案设计测算""监控告警治理""架构评审"——均为案例真题高频命题面。论文（05）今日可只列提纲。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s82"><h1>Day16 强化加练 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day16 ｜ 2题选1 ｜ 建议只列详细提纲（Day12 已完成全文实战）</p>
 </blockquote>
@@ -16691,7 +16685,7 @@ D. 只做实战</p>
 <p>一年建设运行：故障平均定位时间从28分钟降至7分钟，MTTR下降61%，晚高峰重大故障连续三个季度为零。监控数据还反哺了容量管理——大促前的容量评估直接调用历史峰值指标，预测准确度显著提升；每次故障复盘的改进项也常落在"增加某项监控"上，体系自我进化。不足有二：业务指标的经营价值挖掘刚开始，监控数据本可以支持城市运营的精细化决策，目前主要还是"稳定器"而非"决策大脑"；可观测性建设投入不菲（日志存储成本三年增长4倍），我通过冷热分层与采样率治理才压住成本——可观测性同样需要"成本可观测"。我的体会是：第一，可观测性的检验标准是排障速度，一切建设以"缩短从异常到根因的时间"为准绳；第二，业务层指标是体系的灵魂，技术指标必须翻译成业务语言才有决策价值；第三，告警治理是持续运营而非一次工程，信任崩塌容易重建难；第四，指标、日志、追踪三大支柱不是并列的三个系统，而是排障动作的三段接力，联动设计才是精髓。</p>
 <hr />
 <h2>今日收尾</h2>
-<p>错题入本。剩余批次（Day17-18 基础篇/方法篇与能力篇专项强化）请回复"继续"生成。</p></details></section><section class="card" id="s83"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day17 强化加练卷 · 专项一：基础篇＋方法篇（第1-10章）</h1>
+<p>错题入本。剩余批次（Day17-18 基础篇/方法篇与能力篇专项强化）请回复"继续"生成。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s83"><h1>Day17 强化加练卷 · 专项一：基础篇＋方法篇（第1-10章）</h1>
 <blockquote>
 <p>Day17 ｜ 强化加练卷（不绑定日期）｜ 定位：第 1-10 章专项卷——本卷 75 题中第 1-10 章占 55 题</p>
 </blockquote>
@@ -16758,7 +16752,7 @@ D. 只做实战</p>
 <ul>
 <li>[ ] 专项卷得分：<strong><em>_/75（第1-10章板块 </em></strong>_/55）</li>
 <li>[ ] 上表 10 个易错对全部能秒答</li>
-</ul></details></section><section class="card" id="s84"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day17 专项一 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s84"><h1>Day17 专项一 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day17 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 第1-10章占55题</p>
 </blockquote>
@@ -17141,7 +17135,7 @@ B. 追责大会
 C. 表彰会
 D. 事后对目标-结果-差异-改进的结构化总结，形成行动项闭环</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s85"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day17 专项一 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s85"><h1>Day17 专项一 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day17 ｜ 专项卷目标：第1-10章板块（1-60题＋64-65）失分≤12</p>
 </blockquote>
@@ -17484,7 +17478,7 @@ D. 事后对目标-结果-差异-改进的结构化总结，形成行动项闭�
 </tr>
 </tbody>
 </table></div>
-<p>专项薄弱章定位后，回到对应 Day02/Day03 精讲速记卡即可。</p></details></section><section class="card" id="s86"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day17 专项一 · 科目二：案例分析（试题与参考答案）</h1>
+<p>专项薄弱章定位后，回到对应 Day02/Day03 精讲速记卡即可。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s86"><h1>Day17 专项一 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day17 ｜ 共3题，每题25分，限时90分钟 ｜ 场景全部来自第1-10章</p>
 </blockquote>
@@ -17612,7 +17606,7 @@ D. 事后对目标-结果-差异-改进的结构化总结，形成行动项闭�
 </tr>
 </tbody>
 </table></div>
-<p>论文（05）今日列提纲即可。</p></details></section><section class="card" id="s87"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day17 专项一 · 科目三：论文（题目与写作指导）</h1>
+<p>论文（05）今日列提纲即可。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s87"><h1>Day17 专项一 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day17 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -17672,7 +17666,7 @@ D. 事后对目标-结果-差异-改进的结构化总结，形成行动项闭�
 <p>体系建成一年：集团四院区核心系统全部通过等保三级测评；安全事件同比下降81%，两次勒索病毒攻击在边界即被拦截、诊疗业务零中断；钓鱼演练点击率降至4%，全员安全意识明显改善。不足有三：一是医疗设备网的老旧操作系统无法打补丁，只能靠网络隔离兜底，这类"带病运行"是行业性顽疾；二是安全人才短缺，SOC初期只能做到事件看得见、分析依赖厂商，我们通过"厂商驻场＋自有人员跟学"逐步实现自主运营；三是安全投入的显性收益难量化，第二年预算论证时我用"两次勒索拦截避免的潜在损失估算（参照同业事故）"才说服了财务——安全的价值在于"没有发生的事故"，这需要用数据讲故事。我的体会是：第一，医疗安全规划的第一原则是"业务连续性优先"，任何安全措施不能以中断诊疗为代价；第二，纵深防御的实质是"假设任一层会被突破"，层层设防提高攻击成本；第三，安全是运营出来的不是建设出来的——SOC、演练、漏洞闭环这些日常动作才是体系的生命力；第四，把"人"纳入防护体系（培训、演练、意识），因为最坚固的防火墙也会被一次点击绕过。</p>
 <hr />
 <h2>本批（Day13-17）说明</h2>
-<p>Day18（能力篇专项强化）为第一批最后一卷；随后更新 README 并推送 GitHub。Day19-30 待"继续"指令生成。</p></details></section><section class="card" id="s88"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day18 强化加练卷 · 专项二：能力篇（第11-17章）</h1>
+<p>Day18（能力篇专项强化）为第一批最后一卷；随后更新 README 并推送 GitHub。Day19-30 待"继续"指令生成。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s88"><h1>Day18 强化加练卷 · 专项二：能力篇（第11-17章）</h1>
 <blockquote>
 <p>Day18 ｜ 强化加练卷（不绑定日期）｜ 定位：第 11-17 章专项卷——本卷 75 题中能力篇占 52 题</p>
 </blockquote>
@@ -17757,7 +17751,7 @@ D. 事后对目标-结果-差异-改进的结构化总结，形成行动项闭�
 <li>[ ] 本卷得分：<strong><em>_/75（能力篇板块 </em></strong>_/52）</li>
 <li>[ ] 九大对比对全部秒答</li>
 <li>[ ] 万金油五步能在案例中默用</li>
-</ul></details></section><section class="card" id="s89"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day18 专项二 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s89"><h1>Day18 专项二 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day18 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 能力篇（第11-17章）占52题</p>
 </blockquote>
@@ -18138,7 +18132,7 @@ B. 永不故障
 C. 硬件足够贵
 D. 什么都不做</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s90"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day18 专项二 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s90"><h1>Day18 专项二 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day18 ｜ 专项卷目标：能力篇板块（1-75中占52题）失分≤12</p>
 </blockquote>
@@ -18421,7 +18415,7 @@ D. 什么都不做</p>
 </tr>
 </tbody>
 </table></div>
-<p>第 12 章本卷 35 题为最重板块——错题＞5 道，回 Day04/Day05 精讲＋Day09 易错清单重过。</p></details></section><section class="card" id="s91"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day18 专项二 · 科目二：案例分析（试题与参考答案）</h1>
+<p>第 12 章本卷 35 题为最重板块——错题＞5 道，回 Day04/Day05 精讲＋Day09 易错清单重过。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s91"><h1>Day18 专项二 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day18 ｜ 共3题，每题25分，限时90分钟 ｜ 全部为能力篇场景</p>
 </blockquote>
@@ -18543,7 +18537,7 @@ D. 什么都不做</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题覆盖：SIAM 多供应商（12.3.5）、服务改进闭环（12.5）、项目集治理（17.1.5）——均为近年案例新趋势方向。</p></details></section><section class="card" id="s92"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day18 专项二 · 科目三：论文（题目与写作指导）</h1>
+<p>三题覆盖：SIAM 多供应商（12.3.5）、服务改进闭环（12.5）、项目集治理（17.1.5）——均为近年案例新趋势方向。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s92"><h1>Day18 专项二 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day18 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -18611,7 +18605,7 @@ D. 什么都不做</p>
 - Day17：基础篇＋方法篇专项强化
 - Day18：能力篇专项强化</p>
 <p><strong>剩余 Day19-Day30（12 天）为第二批与第三批</strong>：含实践法规专项、计算专项二、论文专项二、全真模拟六至九、错题变形卷、收官卷等。请回复"继续"，我将分两批生成并同步更新 README、推送 GitHub。</p>
-<p><strong>注意</strong>：每日自动化任务原设定生成 Day13-15，与本批手工生成的内容一致（结构相同），明早运行时检测到 Day13 已存在会自动顺延生成 Day16、Day17……若不希望自动化继续覆盖生成（以手工批次为准），可在自动化设置中暂停该任务；或让它继续——其生成的 Day16+ 与本批内容不同（每次生成均为全新命题），可作为"第二版本加练卷"并存使用。</p></details></section><section class="card" id="s93"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day19 强化加练卷 · 专项三：实践篇＋法律法规（第18-24章）</h1>
+<p><strong>注意</strong>：每日自动化任务原设定生成 Day13-15，与本批手工生成的内容一致（结构相同），明早运行时检测到 Day13 已存在会自动顺延生成 Day16、Day17……若不希望自动化继续覆盖生成（以手工批次为准），可在自动化设置中暂停该任务；或让它继续——其生成的 Day16+ 与本批内容不同（每次生成均为全新命题），可作为"第二版本加练卷"并存使用。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s93"><h1>Day19 强化加练卷 · 专项三：实践篇＋法律法规（第18-24章）</h1>
 <blockquote>
 <p>Day19 ｜ 强化加练卷（不绑定日期）｜ 定位：第 18-24 章专项——本卷实践篇与法规共占 48 题</p>
 </blockquote>
@@ -18694,7 +18688,7 @@ D. 什么都不做</p>
 <li>[ ] "一表通"能默写六大领域关注焦点</li>
 <li>[ ] 法规数字清单全部过目（错一罚抄三遍）</li>
 <li>[ ] 本卷得分：<strong><em>_/75（实践法规板块 </em></strong>_/48）</li>
-</ul></details></section><section class="card" id="s94"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day19 专项三 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s94"><h1>Day19 专项三 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day19 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 实践篇＋法规占48题</p>
 </blockquote>
@@ -19077,7 +19071,7 @@ B. 只有重复出现的事物才有标准化的意义与价值
 C. 与重复性无关
 D. 标准越多越好</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s95"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day19 专项三 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s95"><h1>Day19 专项三 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day19 ｜ 实践法规板块（1-22、63-65、69-75 约42题）目标失分≤8</p>
 </blockquote>
@@ -19408,7 +19402,7 @@ D. 标准越多越好</p>
 </tr>
 </tbody>
 </table></div>
-<p>数字题重点复核：5日/30日/2/3/20日/15日/3日/50年/20年/10年/15年/5人单数/6个月/四级——错一个抄三遍。</p></details></section><section class="card" id="s96"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day19 专项三 · 科目二：案例分析（试题与参考答案）</h1>
+<p>数字题重点复核：5日/30日/2/3/20日/15日/3日/50年/20年/10年/15年/5人单数/6个月/四级——错一个抄三遍。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s96"><h1>Day19 专项三 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day19 ｜ 共3题，限时90分钟 ｜ 场景：实践篇＋法规合规</p>
 </blockquote>
@@ -19533,7 +19527,7 @@ D. 标准越多越好</p>
 </tr>
 </tbody>
 </table></div>
-<p>法规计算陷阱复盘：招标日历天数计算（20日/15日/30日）务必画日历核实；"默认勾选≠同意"是案例新热点。</p></details></section><section class="card" id="s97"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day19 专项三 · 科目三：论文（题目与写作指导）</h1>
+<p>法规计算陷阱复盘：招标日历天数计算（20日/15日/30日）务必画日历核实；"默认勾选≠同意"是案例新热点。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s97"><h1>Day19 专项三 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day19 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -19601,7 +19595,7 @@ D. 标准越多越好</p>
 <p>两年可持续运营的答卷：月活用户12万→86万，部门新建场景需求年均增长47%（共建意愿回暖的标志），数据调用量增长3.4倍，运营公司在第二年实现政府购买外的市场化收入1100万元（开放数据增值服务的造血探索），城市大脑获评省级智慧城市运营示范。不足有三：一是市场化造血仍处探索期，1100万元仅覆盖运营成本的15%，商业模式须经得起公共利益的约束，"既能造血、又不越界"的平衡需要持续拿捏；二是区县两级运营能力参差，个别县区"接不住"运营权限，我们以"市带县"结对帮扶逐步补课；三是考核指标的"用"导向初期诱导了个别部门"刷活跃"的倾向，后引入"办成率""复用率"等质量指标才纠偏——考核设计本身也要持续迭代。我的体会是：第一，智慧城市的成败"三分建设、七分运营"，运营的本质是让投入的资产持续产生公共价值，折旧是智慧城市最大的隐形浪费；第二，可持续的核心是机制而非经费——运营主体、考核指挥棒、进退机制三件套立住了，钱的问题自然有解；第三，"市民用不用、市民说好不好"是检验智慧城市的唯一终极标准，运营体系的一切设计最终都要通向这条街面上的真实感受。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day19 完成。下一卷：Day20 计算专项二。</p></details></section><section class="card" id="s98"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day20 强化加练卷 · 专项四：计算专项二（变形与综合）</h1>
+<p>Day19 完成。下一卷：Day20 计算专项二。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s98"><h1>Day20 强化加练卷 · 专项四：计算专项二（变形与综合）</h1>
 <blockquote>
 <p>Day20 ｜ 强化加练卷（不绑定日期）｜ 定位：计算题第二轮——Day11 九大公式的<strong>变形考法</strong>与<strong>组合场景</strong></p>
 </blockquote>
@@ -19683,7 +19677,7 @@ D. 标准越多越好</p>
 <li>[ ] 变形公式（并联可用度/TCPI/自动化替代率）已掌握</li>
 <li>[ ] 本卷计算题 20 题得分：____/20</li>
 <li>[ ] 六步法在案例中已默用</li>
-</ul></details></section><section class="card" id="s99"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day20 专项四 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s99"><h1>Day20 专项四 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day20 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 计算与推演题1-20</p>
 </blockquote>
@@ -20066,7 +20060,7 @@ B. 无任何局限
 C. 越长越好
 D. 不考虑回收期后的现金流与时间价值，须结合NPV使用</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s100"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day20 专项四 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s100"><h1>Day20 专项四 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day20 ｜ 计算板块（1-20、64-75推演类）目标失分≤6</p>
 </blockquote>
@@ -20379,7 +20373,7 @@ D. 不考虑回收期后的现金流与时间价值，须结合NPV使用</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>特别订正</strong>：第12题总时差经严谨计算为 <strong>1天（选B）</strong>——第12题选B。变形计算务必画网络图亲手核验，切勿凭直觉选"看起来对"的数。</p></details></section><section class="card" id="s101"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day20 专项四 · 科目二：案例分析（试题与参考答案·组合计算场景）</h1>
+<p><strong>特别订正</strong>：第12题总时差经严谨计算为 <strong>1天（选B）</strong>——第12题选B。变形计算务必画网络图亲手核验，切勿凭直觉选"看起来对"的数。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s101"><h1>Day20 专项四 · 科目二：案例分析（试题与参考答案·组合计算场景）</h1>
 <blockquote>
 <p>Day20 ｜ 共3题，每题25分，限时90分钟 ｜ 全部为多公式组合计算</p>
 </blockquote>
@@ -20502,7 +20496,7 @@ D. 不考虑回收期后的现金流与时间价值，须结合NPV使用</p>
 </tr>
 </tbody>
 </table></div>
-<p>本卷新公式三连击：<strong>并联可用度、TCPI、EACt</strong>——务必亲手各算一遍。试题一第4问"数据口径矛盾"是真题新型考法：计算后须质疑数据自洽性。</p></details></section><section class="card" id="s102"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day20 专项四 · 科目三：论文（题目与写作指导）</h1>
+<p>本卷新公式三连击：<strong>并联可用度、TCPI、EACt</strong>——务必亲手各算一遍。试题一第4问"数据口径矛盾"是真题新型考法：计算后须质疑数据自洽性。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s102"><h1>Day20 专项四 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day20 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -20571,7 +20565,7 @@ D. 不考虑回收期后的现金流与时间价值，须结合NPV使用</p>
 <p>一年项目：整体资源利用率23%→58%；双十一级峰值（10倍日常并发）零降级、零故障；云支出增速40%→7%，单位业务量成本下降38%；更可持续的是机制——FinOps周复盘例会（资源利用率、成本异常、优化进展三项议程）让容量与成本管理成为日常运营的一部分。不足有二：一是弹性对微服务架构有前提要求，两个遗留单体应用无法水平扩展，只能靠"提前手动扩容＋降级预案"过渡，架构改造完成前它们始终是容量管理的"特区"；二是预测模型对突发的"现象级"事件（某课程意外爆红）仍有滞后，这类长尾场景最终靠限流排队与柔性降级兜底——容量管理要追求"九成可规划、一成可兜底"。我的体会是：第一，容量管理的本质是"业务语言到资源语言的翻译"，翻译精度取决于流量画像与压测数据；第二，弹性是能力不是功能，压测验证与渐进上线是弹性可信的唯一路径；第三，成本是设计的函数——利用率、采购组合、架构可扩展性共同决定成本曲线，单点省钱永远跑不赢体系治理；第四，FinOps的精髓是"让花钱的人看见账单"，组织归因比技术优化更有杀伤力。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day20 完成。下一卷：Day21 论文专项二。</p></details></section><section class="card" id="s103"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day21 强化加练卷 · 专项五：论文专项二（主题扩展与素材包C）</h1>
+<p>Day20 完成。下一卷：Day21 论文专项二。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s103"><h1>Day21 强化加练卷 · 专项五：论文专项二（主题扩展与素材包C）</h1>
 <blockquote>
 <p>Day21 ｜ 强化加练卷（不绑定日期）｜ 定位：论文第二轮——新素材包＋十大扩展主题＋考场时间精细管理</p>
 </blockquote>
@@ -20656,7 +20650,7 @@ D. 不考虑回收期后的现金流与时间价值，须结合NPV使用</p>
 <li>[ ] 素材包 C 数字已默写</li>
 <li>[ ] 十大扩展主题各能 1 句话说清骨架</li>
 <li>[ ] 时间刻度表已了然于心</li>
-</ul></details></section><section class="card" id="s104"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day21 专项五 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s104"><h1>Day21 专项五 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day21 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 论文配套日：综合知识为全章均衡卷</p>
 </blockquote>
@@ -21039,7 +21033,7 @@ B. 以完成度思维替代完美思维："把会做的做满"而非"必须全�
 C. 幻想超常发挥
 D. 放弃治疗</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s105"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day21 专项五 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s105"><h1>Day21 专项五 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day21 ｜ 本卷前60题为能力与工程实践均衡卷，61-75为考试技术专项（应试技能本身也是考点）</p>
 </blockquote>
@@ -21257,7 +21251,7 @@ D. 放弃治疗</p>
 <strong>75. B</strong>【应试】完成度思维替代完美思维。</p>
 <h2>三、复盘</h2>
 <p>本卷61-75为"应试技术题"——这些不是教材考点而是<strong>考试本身的规律</strong>，考前值得像考点一样背下来。综合知识得分：____/75。</p>
-<p>论文（05）今日必做：用素材包C为两个新主题各写一段300字"核心实践展开"练笔。</p></details></section><section class="card" id="s106"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day21 专项五 · 科目二：案例分析（试题与参考答案）</h1>
+<p>论文（05）今日必做：用素材包C为两个新主题各写一段300字"核心实践展开"练笔。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s106"><h1>Day21 专项五 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day21 ｜ 共3题，限时90分钟 ｜ 场景侧重：服务连续性与合规（素材包C配套训练）</p>
 </blockquote>
@@ -21377,7 +21371,7 @@ D. 放弃治疗</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题为素材包C（金融合规）配套案例：投产窗口/连续性/合规检查——与论文C包素材形成"一个项目吃三遍"的深度模式。</p></details></section><section class="card" id="s107"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day21 专项五 · 科目三：论文（题目与写作指导·素材包C实战）</h1>
+<p>三题为素材包C（金融合规）配套案例：投产窗口/连续性/合规检查——与论文C包素材形成"一个项目吃三遍"的深度模式。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s107"><h1>Day21 专项五 · 科目三：论文（题目与写作指导·素材包C实战）</h1>
 <blockquote>
 <p>Day21 ｜ 2题选1 ｜ 今日任务：<strong>用素材包C写一篇全文</strong>（120分钟）——检验第三套素材的成文能力</p>
 </blockquote>
@@ -21451,7 +21445,7 @@ D. 放弃治疗</p>
 <p>两年运行：历次监管检查零重大问题，非现场报送零差错，合规评分在辖内公司名列前茅；更深层的变化是文化——一线员工从"合规是科技部合规岗的事"转变为流程里自然带着合规动作，一次外部渗透测试报告出来，三个团队主动来问"这个结果要不要按事件报告义务上报"。不足有二：一是法规更新追踪仍靠人工（86项义务源自4类法规的30余份文件），监管新规出台后的义务更新存在滞后窗口，我们靠法务定期推送与行业协会信息弥补，长期看需要法规情报的订阅化机制；二是合规成本客观存在，双人复核、证据归档增加了约5%的运维工作量，我曾用"避免一次监管处罚的损失"为管理层算过总账——合规投入是最便宜的保险。我的体会是：第一，合规管理的本质是"义务的翻译与固化"——把法条翻译成岗位动作、用流程与技术固化下来，合规就不再是纸面文章；第二，证据管理是与监管对话的语言，日常按检查逻辑存证，检查时才有从容；第三，监管应对的最高境界是常态化——最好的迎检是不需要迎接，因为每天都在迎检；第四，合规的终极价值不在过关，而在于为公司积攒"监管信任"这一无形资产。</p>
 <hr />
 <h2>今日实战要求</h2>
-<p>选一题用素材包C<strong>写全文120分钟</strong>（昨天Day20只列提纲，今日补齐C包的全文手感）。写完对照：C包数字是否用上（620万/19人/99.95%/28分钟）？三个高级考点（切换决策要素/证据链/分级策略）是否出现？</p></details></section><section class="card" id="s108"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day22 强化加练卷 · 全真模拟六：命题视角训练</h1>
+<p>选一题用素材包C<strong>写全文120分钟</strong>（昨天Day20只列提纲，今日补齐C包的全文手感）。写完对照：C包数字是否用上（620万/19人/99.95%/28分钟）？三个高级考点（切换决策要素/证据链/分级策略）是否出现？</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s108"><h1>Day22 强化加练卷 · 全真模拟六：命题视角训练</h1>
 <blockquote>
 <p>Day22 ｜ 强化加练卷（不绑定日期）｜ 定位：第六轮整卷——换一个学法：<strong>从"做题人"切换到"命题人"视角</strong></p>
 </blockquote>
@@ -21481,7 +21475,7 @@ D. 放弃治疗</p>
 <li>[ ] 三科得分记录：综合<strong><em>_/75、案例</em></strong>_/75</li>
 <li>[ ] 5 道错题完成"命题人四问"</li>
 <li>[ ] 八种武器能对号入座到自己的错题</li>
-</ul></details></section><section class="card" id="s109"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day22 全真模拟六 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s109"><h1>Day22 全真模拟六 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day22 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 结构完全仿真</p>
 </blockquote>
@@ -21863,7 +21857,7 @@ B. 只有一级
 C. 全部公开
 D. 无输出</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s110"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day22 全真模拟六 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s110"><h1>Day22 全真模拟六 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day22 ｜ 满分75分，45分及格，目标 58+</p>
 </blockquote>
@@ -22224,7 +22218,7 @@ D. 无输出</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>命题人训练任务</strong>：任选5道错题写"四问"复盘（考点定位/正确项包装/干扰项套路/自命题变形）——写完这道题就真正属于你了。</p></details></section><section class="card" id="s111"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day22 全真模拟六 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>命题人训练任务</strong>：任选5道错题写"四问"复盘（考点定位/正确项包装/干扰项套路/自命题变形）——写完这道题就真正属于你了。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s111"><h1>Day22 全真模拟六 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day22 ｜ 共3题，每题25分，限时90分钟</p>
 </blockquote>
@@ -22341,7 +22335,7 @@ D. 无输出</p>
 </tr>
 </tbody>
 </table></div>
-<p>本卷案例三题均含"判断+机制设计"复合问——新大纲案例的命题深度已从"背流程"转向"会治理"，答题务必先判断、再机制、后落地。</p></details></section><section class="card" id="s112"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day22 全真模拟六 · 科目三：论文（题目与写作指导）</h1>
+<p>本卷案例三题均含"判断+机制设计"复合问——新大纲案例的命题深度已从"背流程"转向"会治理"，答题务必先判断、再机制、后落地。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s112"><h1>Day22 全真模拟六 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day22 ｜ 2题选1 ｜ 列提纲即可（本周期全文已在Day21完成）</p>
 </blockquote>
@@ -22412,7 +22406,7 @@ D. 无输出</p>
 <p>治理成效我用"架构债"度量：盘点登记架构债187项（点对点接口、重复系统、过时技术栈），按影响与整改成本排序，纳入年度偿还计划与条线考核，两年偿还91项，存量债务下降49%。结果指标同步向好：技术栈从47种收敛到19种、新建接口100%走总线、重复立项零发生，监管复检对架构管理给出合格评价。不足有二：一是存量偿还比预期慢——点对点接口的改造涉及核心系统，每次都要等大版本窗口，架构债的偿还节奏受制于业务排期，这提示治理要尽早开始，"欠债十年，还债十年"；二是架构师队伍能力参差，个别评审走过场，我们通过评审质量抽检与架构师轮训来持续校准。我的体会是：第一，架构治理的本质是"把架构决策权收归秩序"——组织、规则、闸门三件套缺一不可，委员会赋予权威、办公室承载专业、闸门执行纪律；第二，标准落地靠工具而非觉悟，谁能让"合规成本"更低谁就赢了；第三，例外机制是治理的减震器，敢于例外、管住例外，秩序才有可持续性；第四，架构债要明账管理，容忍欠债但不允许糊涂账——账算得清，还得上。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day22 完成。下一卷：Day23 全真模拟七。</p></details></section><section class="card" id="s113"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day23 强化加练卷 · 全真模拟七：时间压力训练</h1>
+<p>Day22 完成。下一卷：Day23 全真模拟七。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s113"><h1>Day23 强化加练卷 · 全真模拟七：时间压力训练</h1>
 <blockquote>
 <p>Day23 ｜ 强化加练卷（不绑定日期）｜ 定位：第七轮整卷——<strong>提速训练</strong>：按"压缩 15%"的节奏执行</p>
 </blockquote>
@@ -22468,7 +22462,7 @@ D. 无输出</p>
 <li>[ ] 综合知识提速卷得分：____/75（125分钟内）</li>
 <li>[ ] 案例得分：____/75（75分钟内）</li>
 <li>[ ] 提速后正确率与常速对比下降 ≤5 题（超过则说明提速变抢答，回调节奏）</li>
-</ul></details></section><section class="card" id="s114"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day23 全真模拟七 · 科目一：综合知识（试题·提速卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s114"><h1>Day23 全真模拟七 · 科目一：综合知识（试题·提速卷）</h1>
 <blockquote>
 <p>Day23 ｜ 强化加练卷 ｜ 75题，<strong>提速限时125分钟</strong></p>
 </blockquote>
@@ -22850,7 +22844,7 @@ B. 只抄书本案例
 C. 保密不共享
 D. 沉淀真实故障改编的情景卡片（含注入点/预期反应/评分标准）</p>
 <hr />
-<p>（试题完 ｜ 125分钟到点即停）</p></details></section><section class="card" id="s115"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day23 全真模拟七 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 125分钟到点即停）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s115"><h1>Day23 全真模拟七 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day23 ｜ 提速卷：核对用时与正确率双指标</p>
 </blockquote>
@@ -23199,7 +23193,7 @@ D. 沉淀真实故障改编的情景卡片（含注入点/预期反应/评分标
 </tr>
 </tbody>
 </table></div>
-<p><strong>提速双指标记录</strong>：用时<strong><em>_分钟（目标≤125）；得分</em></strong>_/75。若用时达标但得分较常速下降＞5题→明日回常速练准确率；若用时超标但分数高→明天再练一轮提速（Day23案例同规则）。</p></details></section><section class="card" id="s116"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day23 全真模拟七 · 科目二：案例分析（试题与参考答案·提速卷）</h1>
+<p><strong>提速双指标记录</strong>：用时<strong><em>_分钟（目标≤125）；得分</em></strong>_/75。若用时达标但得分较常速下降＞5题→明日回常速练准确率；若用时超标但分数高→明天再练一轮提速（Day23案例同规则）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s116"><h1>Day23 全真模拟七 · 科目二：案例分析（试题与参考答案·提速卷）</h1>
 <blockquote>
 <p>Day23 ｜ 共3题，<strong>提速限时75分钟</strong>（每题20分钟硬闹钟）</p>
 </blockquote>
@@ -23316,7 +23310,7 @@ D. 沉淀真实故障改编的情景卡片（含注入点/预期反应/评分标
 </tr>
 </tbody>
 </table></div>
-<p>提速卷三题均为<strong>新场景</strong>（SaaS多租户/IT内部服务转型/数据平台治理）——新大纲案例最爱"转型与治理"复合场景，请对照参考答案补齐你没想到的要点。</p></details></section><section class="card" id="s117"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day23 全真模拟七 · 科目三：论文（题目与写作指导）</h1>
+<p>提速卷三题均为<strong>新场景</strong>（SaaS多租户/IT内部服务转型/数据平台治理）——新大纲案例最爱"转型与治理"复合场景，请对照参考答案补齐你没想到的要点。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s117"><h1>Day23 全真模拟七 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day23 ｜ 2题选1 ｜ 今日：<strong>15分钟限时提纲训练</strong>（练审题与结构速度）</p>
 </blockquote>
@@ -23403,7 +23397,7 @@ DevOps 强调开发运维一体协作与自动化流水线。传统团队转型 
 <li>[ ] 15分钟内完成所选提纲（含摘要骨架）</li>
 <li>[ ] 五件套/四步路径要点齐全</li>
 <li>[ ] 数据位全部预填（即使暂用占位数字）</li>
-</ul></details></section><section class="card" id="s118"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day24 强化加练卷 · 专项六：错题变形卷（高频易错点变形重练）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s118"><h1>Day24 强化加练卷 · 专项六：错题变形卷（高频易错点变形重练）</h1>
 <blockquote>
 <p>Day24 ｜ 强化加练卷（不绑定日期）｜ 定位：<strong>反刍卷</strong>——全库 20+ 套卷中被高频做错的 40 个考点，全部以"变形题"形态重新命题</p>
 </blockquote>
@@ -23512,7 +23506,7 @@ DevOps 强调开发运维一体协作与自动化流水线。传统团队转型 
 <li>[ ] 本卷得分：____/75（这是全库错点的"期终考试"，目标 65+）</li>
 <li>[ ] "变会三步"全部执行</li>
 <li>[ ] 错题本完成一轮"移出/保留/二变"整理</li>
-</ul></details></section><section class="card" id="s119"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day24 错题变形卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s119"><h1>Day24 错题变形卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day24 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 全部为高频错点变形题</p>
 </blockquote>
@@ -23895,7 +23889,7 @@ B. 疯狂翻卷
 C. 与邻座聊天
 D. 提前动笔</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s120"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day24 错题变形卷 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s120"><h1>Day24 错题变形卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day24 ｜ 本卷是全库错点"期终考"：65+＝错题体系已闭环；55-64＝错题本保留项今晚再过；&lt;55＝薄弱章回到对应 Day 精讲重学</p>
 </blockquote>
@@ -24148,7 +24142,7 @@ D. 提前动笔</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>执行"变会三步"</strong>：全卷错题逐题标注（做对且能讲原理=移出；仍错=保留标"二变"；二变仍错=下一卷前先做该考点专项）。</p></details></section><section class="card" id="s121"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day24 错题变形卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>执行"变会三步"</strong>：全卷错题逐题标注（做对且能讲原理=移出；仍错=保留标"二变"；二变仍错=下一卷前先做该考点专项）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s121"><h1>Day24 错题变形卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day24 ｜ 共3题，限时90分钟 ｜ 全部为高频案例错点的场景变形</p>
 </blockquote>
@@ -24265,7 +24259,7 @@ D. 提前动笔</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题覆盖原错点：<strong>口径切换（季度vs月）、审计独立验证、挣值叠加风险、干系人新诉求</strong>——若仍有失分，说明该错点未"变会"，执行三步法第三步。</p></details></section><section class="card" id="s122"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day24 错题变形卷 · 科目三：论文（题目与写作指导）</h1>
+<p>三题覆盖原错点：<strong>口径切换（季度vs月）、审计独立验证、挣值叠加风险、干系人新诉求</strong>——若仍有失分，说明该错点未"变会"，执行三步法第三步。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s122"><h1>Day24 错题变形卷 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day24 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -24344,7 +24338,7 @@ D. 提前动笔</p>
 - Day22 全真模拟六（命题人四问复盘法＋八种武器）
 - Day23 全真模拟七（提速训练：125/75分钟压缩模式）
 - Day24 错题变形卷（40+错点全部变形再考＋变会三步法）</p>
-<p><strong>第三批（Day25-30）</strong>：全真模拟八/九、案例进阶卷、概念混淆终极卷、跨章综合卷、收官全真卷——回复"继续"生成，完成后更新 README 并统一推送 GitHub。</p></details></section><section class="card" id="s123"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day25 强化加练卷 · 全真模拟八：交叉考点训练</h1>
+<p><strong>第三批（Day25-30）</strong>：全真模拟八/九、案例进阶卷、概念混淆终极卷、跨章综合卷、收官全真卷——回复"继续"生成，完成后更新 README 并统一推送 GitHub。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s123"><h1>Day25 强化加练卷 · 全真模拟八：交叉考点训练</h1>
 <blockquote>
 <p>Day25 ｜ 强化加练卷（不绑定日期）｜ 定位：第八轮整卷——<strong>跨章交叉考点</strong>：真题高级感的来源正是"一道题串两章"</p>
 </blockquote>
@@ -24425,7 +24419,7 @@ D. 提前动笔</p>
 <li>[ ] 本卷得分：<strong><em>_/75（交叉题板块 </em></strong>_/30）</li>
 <li>[ ] 十大交叉带能各举一例</li>
 <li>[ ] 三步拆解法已在案例中应用</li>
-</ul></details></section><section class="card" id="s124"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day25 全真模拟八 · 科目一：综合知识（试题·交叉卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s124"><h1>Day25 全真模拟八 · 科目一：综合知识（试题·交叉卷）</h1>
 <blockquote>
 <p>Day25 ｜ 强化加练卷 ｜ 75题，限时150分钟</p>
 </blockquote>
@@ -24809,7 +24803,7 @@ B. 定期评估自己的得分结构与时间分配并动态调整策略（应�
 C. 从不复盘
 D. 玄学</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s125"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day25 全真模拟八 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s125"><h1>Day25 全真模拟八 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day25 ｜ 交叉卷：交叉题（1-30、46-75）是拉分关键</p>
 </blockquote>
@@ -25128,7 +25122,7 @@ D. 玄学</p>
 </tr>
 </tbody>
 </table></div>
-<p>跨章交叉 35 题、题型专项 11 题——若交叉题失分＞8，说明"单章会、两章连不上"，回去把 Day25 精讲"十大交叉带"逐条自述一遍。</p></details></section><section class="card" id="s126"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day25 全真模拟八 · 科目二：案例分析（试题与参考答案·交叉场景卷）</h1>
+<p>跨章交叉 35 题、题型专项 11 题——若交叉题失分＞8，说明"单章会、两章连不上"，回去把 Day25 精讲"十大交叉带"逐条自述一遍。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s126"><h1>Day25 全真模拟八 · 科目二：案例分析（试题与参考答案·交叉场景卷）</h1>
 <blockquote>
 <p>Day25 ｜ 共3题，每题25分，限时90分钟 ｜ 每题横跨至少两个知识模块</p>
 </blockquote>
@@ -25245,7 +25239,7 @@ D. 玄学</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题交叉结构：治理×服务／技术选型×成本×安全／转型×人员×激励——对照参考答案检验自己"跨章连接点"是否找全。</p></details></section><section class="card" id="s127"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day25 全真模拟八 · 科目三：论文（题目与写作指导·交叉主题）</h1>
+<p>三题交叉结构：治理×服务／技术选型×成本×安全／转型×人员×激励——对照参考答案检验自己"跨章连接点"是否找全。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s127"><h1>Day25 全真模拟八 · 科目三：论文（题目与写作指导·交叉主题）</h1>
 <blockquote>
 <p>Day25 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -25310,7 +25304,7 @@ D. 玄学</p>
 <p>一年协同：首批6个场景全部按期上线且数据质量门全数达标；主数据标准覆盖率34%→89%，核心数据质量指标（一致率、完整率）稳定在99%以上；效期损失下降31%、采购周转变快0.7天——转型收益清单里的每个数字背后都有一项治理任务支撑。集团将"治转一体"写入三年战略，第二批12个场景与39项治理任务已按同一节奏启动。不足有二：一是"以用带治"意味着非首批场景的领域治理暂缓，个别部门担心"我们被遗忘"，我以治理路线图公示（哪些领域何时纳入）化解焦虑——以用带治不等于不管全局，路线图透明很重要；二是协同初期治理团队有些"降格失落"（从独立大项目到服务场景），我是靠让治理人员参加场景上线庆祝、在成果署名中凸显数据贡献来重建荣誉感的。我的体会是：第一，数据治理与转型不是先后关系而是供需关系，协同的本质是让治理的产出（可信数据）与转型的需求（场景用数）在时间与质量上咬合；第二，"以用带治、小步快跑"是治理落地的最优路径，场景就是治理最好的立项报告与验收标准；第三，组织与流程的咬合（合署办公、评审嵌入、共用时间盒）比任何协同口号都有效；第四，让业务看见"治理后的数据值多少钱"，是治理可持续的终极答案——价值证明一次，支持自然到来。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day25 完成。下一卷：Day26 案例进阶卷。</p></details></section><section class="card" id="s128"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day26 强化加练卷 · 专项七：案例进阶（新题型与深场景）</h1>
+<p>Day25 完成。下一卷：Day26 案例进阶卷。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s128"><h1>Day26 强化加练卷 · 专项七：案例进阶（新题型与深场景）</h1>
 <blockquote>
 <p>Day26 ｜ 强化加练卷（不绑定日期）｜ 定位：案例科目进阶——<strong>新题型仿真＋深度场景</strong>训练</p>
 </blockquote>
@@ -25371,7 +25365,7 @@ D. 玄学</p>
 <li>[ ] 案例三题得分：____/75（进阶卷目标 50+）</li>
 <li>[ ] 五维结构在每题中自检过</li>
 <li>[ ] 数据表读表三步已应用</li>
-</ul></details></section><section class="card" id="s129"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day26 专项七 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s129"><h1>Day26 专项七 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day26 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 含10道案例思维题（66-75）</p>
 </blockquote>
@@ -25754,7 +25748,7 @@ B. 先稳定核心骨干（一对一面谈+工作量调整）→再根因治理�
 C. 严格处罚
 D. 等待自愈</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s130"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day26 专项七 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s130"><h1>Day26 专项七 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day26 ｜ 案例思维题（1-15、61-75 共30题）是本卷核心</p>
 </blockquote>
@@ -26079,7 +26073,7 @@ D. 等待自愈</p>
 </tr>
 </tbody>
 </table></div>
-<p>案例思维 30 题失分＞8，说明"会知识但不会做题"——重点不是背考点而是把每题的<strong>分析路径</strong>复述一遍。</p></details></section><section class="card" id="s131"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day26 专项七 · 科目二：案例分析（进阶新题型）</h1>
+<p>案例思维 30 题失分＞8，说明"会知识但不会做题"——重点不是背考点而是把每题的<strong>分析路径</strong>复述一遍。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s131"><h1>Day26 专项七 · 科目二：案例分析（进阶新题型）</h1>
 <blockquote>
 <p>Day26 ｜ 共3题，每题25分，限时90分钟 ｜ 全部为进阶题型</p>
 </blockquote>
@@ -26253,7 +26247,7 @@ D. 等待自愈</p>
 </tr>
 </tbody>
 </table></div>
-<p>三种新题型的共性：<strong>给足上下文，考"用知识"而非"背知识"</strong>——对照参考答案检查自己是否"答到流程与机制层"而非停留现象层。</p></details></section><section class="card" id="s132"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day26 专项七 · 科目三：论文（题目与写作指导）</h1>
+<p>三种新题型的共性：<strong>给足上下文，考"用知识"而非"背知识"</strong>——对照参考答案检查自己是否"答到流程与机制层"而非停留现象层。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s132"><h1>Day26 专项七 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day26 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -26313,7 +26307,7 @@ D. 等待自愈</p>
 <p>18个月转型：试点域需求交付周期68天→22天，业务满意度71→93分，需求吞吐量提升约2.1倍；第二年新组建特性团队6个，覆盖集团核心业务域过半；两名内部教练成长起来，转型进入自复制阶段。不足有三：一是运维职能的敏捷化明显滞后——开发转型了而运维还按老模式，发布与变更成为新的瓶颈，我们第三年启动了"运维左移"专项；二是部分老工程师始终未适应，两人选择转岗到更适合其风格的技术专家岗——转型要允许"不适合者体面退出"，强扭的敏捷不甜；三是国企流程性要求（立项、采购、审计）与敏捷节奏的磨合仍在路上，敏捷转型改变的是IT的工作方式，改变不了企业治理的合规边界，两者的接驳需要长期智慧。我的体会是：第一，敏捷转型的本质是"协作方式与权力结构"的变革，站会看板只是外显形式——只学仪式的转型必然"形似神不似"；第二，试点成功是转型最好的政治，证据比动员有效一万倍；第三，考核与授权是转型的两大命门——不重构考核则行为必然回退，不给团队授权则敏捷变成"带枷锁跳舞"；第四，面对抗拒，区分"利益受损者"与"习惯不适者"分别化解，前者要制度安排，后者要时间与陪伴——抗拒不是转型的障碍，而是转型必须消化的组织现实。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day26 完成。下一卷：Day27 概念混淆终极卷。</p></details></section><section class="card" id="s133"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day27 强化加练卷 · 专项八：概念混淆终极对决（50 组易混概念）</h1>
+<p>Day26 完成。下一卷：Day27 概念混淆终极卷。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s133"><h1>Day27 强化加练卷 · 专项八：概念混淆终极对决（50 组易混概念）</h1>
 <blockquote>
 <p>Day27 ｜ 强化加练卷（不绑定日期）｜ 定位：全库最后一轮"概念纠察"——50 组最容易混淆的概念对，全部以对比题形态出现</p>
 </blockquote>
@@ -26592,7 +26586,7 @@ D. 等待自愈</p>
 <ul>
 <li>[ ] 50 组速查表通读并标记仍犹豫的组（≤5组）</li>
 <li>[ ] 本卷得分：____/75（概念卷目标 65+）</li>
-</ul></details></section><section class="card" id="s134"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day27 专项八 · 科目一：综合知识（试题·概念对决卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s134"><h1>Day27 专项八 · 科目一：综合知识（试题·概念对决卷）</h1>
 <blockquote>
 <p>Day27 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 全部为混淆辨析题</p>
 </blockquote>
@@ -26973,7 +26967,7 @@ B. 目标留缓冲防波动（模拟高于及格线以保底通过）
 C. 及格线可议
 D. 无关系</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s135"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day27 专项八 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s135"><h1>Day27 专项八 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day27 ｜ 概念对决卷目标 65+（低于 60 说明概念地基不稳，回归 Day27 精讲 50 组表逐条自测）</p>
 </blockquote>
@@ -27226,7 +27220,7 @@ D. 无关系</p>
 </tr>
 </tbody>
 </table></div>
-<p><strong>终极自测法</strong>：合上答案，任指速查表一组概念，10 秒内说出"辨析一句话"——50 组全部通过，概念关毕业。</p></details></section><section class="card" id="s136"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day27 专项八 · 科目二：案例分析（混淆事故场景卷）</h1>
+<p><strong>终极自测法</strong>：合上答案，任指速查表一组概念，10 秒内说出"辨析一句话"——50 组全部通过，概念关毕业。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s136"><h1>Day27 专项八 · 科目二：案例分析（混淆事故场景卷）</h1>
 <blockquote>
 <p>Day27 ｜ 共3题，每题25分，限时90分钟 ｜ 每题场景均由"概念混淆"引发</p>
 </blockquote>
@@ -27356,7 +27350,7 @@ D. 无关系</p>
 </tr>
 </tbody>
 </table></div>
-<p>三题即"概念混淆事故博物馆"——若某题失分＞8，回到 Day27 精讲 50 组表对应组别做 10 秒自测。</p></details></section><section class="card" id="s137"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day27 专项八 · 科目三：论文（题目与写作指导）</h1>
+<p>三题即"概念混淆事故博物馆"——若某题失分＞8，回到 Day27 精讲 50 组表对应组别做 10 秒自测。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s137"><h1>Day27 专项八 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day27 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -27427,7 +27421,7 @@ D. 无关系</p>
 <p>成效用三个反推指标度量：复用率（排障时实际调用知识的工单占比）从19%升至67%；升级率（地市无法解决升级省级的工单比）从15%降至4%；故障平均定位时间缩短58%——知识运营的每一项投入都可在这些数字上找到回报。更有价值的副产品是"新人培养加速"：新值班员上岗培训从6周压缩到3周，学习路径就是知识库的阶梯式案例集。不足有二：一是隐性知识显性化仍有死角——资深专家"一看告警就知道毛病"的直觉判断难以条文化，我们用"专家跟班复盘"的方式让专家口述、管家整理，但覆盖有限，隐性知识永远要靠师徒制补位；二是知识质量参差的现象未绝迹，管家评审松紧不一，我们引入了"使用反馈评分"倒逼（差评知识强制重审），让用户成为终极评审。我的体会是：第一，知识管理的成败不在库而在"运营"——生产、组织、推送、更新、激励五个环节接成闭环，库才是活的；第二，"知识找人"的推送是知识库从档案变武器的转折点，触达决定价值；第三，度量要反向设计——不看"存了多少"，看"省了多少时间、少了多少升级"；第四，知识运营的最高境界是形成"分享有回报、使用有依赖"的组织习惯，此时知识管理就不再需要专门推动，它已成为组织呼吸的一部分。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day27 完成。下一卷：Day28 全真模拟九。</p></details></section><section class="card" id="s138"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day28 强化加练卷 · 全真模拟九：临场决策训练</h1>
+<p>Day27 完成。下一卷：Day28 全真模拟九。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s138"><h1>Day28 强化加练卷 · 全真模拟九：临场决策训练</h1>
 <blockquote>
 <p>Day28 ｜ 强化加练卷（不绑定日期）｜ 定位：第九轮整卷——模拟考场的<strong>不确定性应对</strong>：含争议题处理、时间陷阱、超纲词排除</p>
 </blockquote>
@@ -27504,7 +27498,7 @@ D. 无关系</p>
 <li>[ ] 本卷得分：____/75</li>
 <li>[ ] 解析标注的九型情境题逐题复盘（找到自己易掉的坑型）</li>
 <li>[ ] 五律能默写</li>
-</ul></details></section><section class="card" id="s139"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day28 全真模拟九 · 科目一：综合知识（试题·临场决策卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s139"><h1>Day28 全真模拟九 · 科目一：综合知识（试题·临场决策卷）</h1>
 <blockquote>
 <p>Day28 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 本卷埋设考场九型情境（解析标注）</p>
 </blockquote>
@@ -27885,7 +27879,7 @@ B. 题目字数多少
 C. 是否冷门
 D. 押题传言</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s140"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day28 全真模拟九 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s140"><h1>Day28 全真模拟九 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day28 ｜ 临场决策卷：本卷题目为"高确定性基础考点全覆盖"，检验基本功与决策律</p>
 </blockquote>
@@ -28240,7 +28234,7 @@ D. 押题传言</p>
 <td>／9</td>
 </tr>
 </tbody>
-</table></div></details></section><section class="card" id="s141"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day28 全真模拟九 · 科目二：案例分析（试题与参考答案）</h1>
+</table></div><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s141"><h1>Day28 全真模拟九 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day28 ｜ 共3题，每题25分，限时90分钟 ｜ 含"信息不足开放小问"（训练合理假设能力）</p>
 </blockquote>
@@ -28353,7 +28347,7 @@ D. 押题传言</p>
 </tr>
 </tbody>
 </table></div>
-<p>三道开放小问训练"合理假设与结构化表达"——答题模板：<strong>先给框架（分层/分维），再逐层展开，最后收敛结论</strong>。</p></details></section><section class="card" id="s142"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day28 全真模拟九 · 科目三：论文（题目与写作指导）</h1>
+<p>三道开放小问训练"合理假设与结构化表达"——答题模板：<strong>先给框架（分层/分维），再逐层展开，最后收敛结论</strong>。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s142"><h1>Day28 全真模拟九 · 科目三：论文（题目与写作指导）</h1>
 <blockquote>
 <p>Day28 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -28423,7 +28417,7 @@ D. 押题传言</p>
 <p>两年演进：自动化覆盖率72%、年释放人力1.9万工时、MTTR下降52%、工单积压下降76%、智能根因定位准确率82%、自动化误操作零事故；节省的人力全部投向了主动运维与数据分析——团队从"救火队"转型为"经营型服务组织"。不足有二：一是智能化对数据质量的依赖远超预期——工单记录不规范曾让相似推荐准确率一度跌到48%，我们回头补了半年的工单数据治理，教训是"想用AI，先养数据"；二是部分老师傅的隐性经验仍未转化为可复用的智能规则，AI目前学的是历史工单，学不会老师傅的"直觉"——人机协同的深度还有很长的路。我的体会是：第一，演进路径要尊重能力规律，脚本化、平台化、智能化三台阶不能跳级；第二，场景选择要"价值+数据+判断负担"三维评估，没有痛点的智能化是摆设；第三，自动化时代的安全不在于操作少而在于纪律严——分级授权、灰度验证、人工断点是三条命；第四，技术的演进必须同步人的演进，让团队成为自动化的受益者而非受害者——人机关系的温度，决定演进的速度。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day28 完成。下一卷：Day29 跨章终极综合卷。</p></details></section><section class="card" id="s143"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day29 强化加练卷 · 专项九：跨章终极综合（全书知识网络）</h1>
+<p>Day28 完成。下一卷：Day29 跨章终极综合卷。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s143"><h1>Day29 强化加练卷 · 专项九：跨章终极综合（全书知识网络）</h1>
 <blockquote>
 <p>Day29 ｜ 强化加练卷（不绑定日期）｜ 定位：把 24 章"点状知识"织成"网状体系"——一张图记住一本书</p>
 </blockquote>
@@ -28478,7 +28472,7 @@ IT服务全生命周期（第12章 战略规划→设计→运营→退役→持
 <li>[ ] 能默画"六层网络图"框架</li>
 <li>[ ] 15 条连接线能各说一句话</li>
 <li>[ ] 本卷得分：____/75</li>
-</ul></details></section><section class="card" id="s144"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day29 专项九 · 科目一：综合知识（试题·知识网络卷）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s144"><h1>Day29 专项九 · 科目一：综合知识（试题·知识网络卷）</h1>
 <blockquote>
 <p>Day29 ｜ 强化加练卷 ｜ 75题，限时150分钟 ｜ 按"战略→规划→建设→运营→实践→规则"六层分布</p>
 </blockquote>
@@ -28859,7 +28853,7 @@ B. 继续大量学新内容
 C. 全部推倒重来
 D. 知识网络已成，考前以"过网"（速记+错题）代替"补网"（学新）</p>
 <hr />
-<p>（试题完）</p></details></section><section class="card" id="s145"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day29 专项九 · 综合知识（答案与解析）</h1>
+<p>（试题完）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s145"><h1>Day29 专项九 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day29 ｜ 知识网络卷目标 60+</p>
 </blockquote>
@@ -29208,7 +29202,7 @@ D. 知识网络已成，考前以"过网"（速记+错题）代替"补网"（学
 </tr>
 </tbody>
 </table></div>
-<p><strong>最后一步</strong>：把本卷连接题（含专项41题）的"连接线"抄在一张纸上——这张纸就是你的"全书一页通"，考前最后翻阅它比翻教材有效。</p></details></section><section class="card" id="s146"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day29 专项九 · 科目二：案例分析（试题与参考答案·跨章综合）</h1>
+<p><strong>最后一步</strong>：把本卷连接题（含专项41题）的"连接线"抄在一张纸上——这张纸就是你的"全书一页通"，考前最后翻阅它比翻教材有效。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s146"><h1>Day29 专项九 · 科目二：案例分析（试题与参考答案·跨章综合）</h1>
 <blockquote>
 <p>Day29 ｜ 共3题，每题25分，限时90分钟 ｜ 每题串联3-4章</p>
 </blockquote>
@@ -29327,7 +29321,7 @@ A集团并购B公司后IT整合面临：①两套ERP（品牌不同、主数据�
 </tr>
 </tbody>
 </table></div>
-<p>三题均为"一个场景串全书"——这正是案例真题的终极形态。检查自己能否在每个小问中调用跨章知识。</p></details></section><section class="card" id="s147"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day29 专项九 · 科目三：论文（题目与写作指导·顶层综合主题）</h1>
+<p>三题均为"一个场景串全书"——这正是案例真题的终极形态。检查自己能否在每个小问中调用跨章知识。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s147"><h1>Day29 专项九 · 科目三：论文（题目与写作指导·顶层综合主题）</h1>
 <blockquote>
 <p>Day29 ｜ 2题选1 ｜ 列提纲即可</p>
 </blockquote>
@@ -29387,7 +29381,7 @@ A集团并购B公司后IT整合面临：①两套ERP（品牌不同、主数据�
 <p>两年变革：云原生人才自给率12%→78%，支撑核心改造项目自主可控率达标；主动流失率17%→7%（行业均值的1/2），内部技术人才市场"内部活水"流动38人次；跨团队协作满意度提升21分；"失败案例分享会"成为公司最受欢迎的会议品牌——这个细节最能说明文化之变：以前藏失败，如今抢着讲失败。不足有二：一是文化变革在中层仍有"温差"——高管层与一线拥抱变革，个别中层管理者仍在用旧地图导航，变革的深化需要中层激励与问责的持续校准；二是容错有边界——"不追责"不适用于违规与隐瞒（我们处理过一起隐瞒故障事件，公开处理恰恰维护了容错机制的严肃性）——容错文化与问责纪律必须双轨清晰，否则宽容会被滥用为纵容。我的体会是：第一，能力建设与文化建设是一体两面——能力给人底气、文化给人土壤，缺一运转不灵；第二，文化的本质是行为，变革从改行为入手、以事例立信、靠制度沉淀，比一百场动员会有用；第三，容错机制是高科技组织的第一基础设施——人不敢试错，一切新能力都是摆设；第四，变革最大的技巧是节奏——速赢建信心、制度防回潮、让变革的受益者成为变革的传播者。</p>
 <hr />
 <h2>本日收尾</h2>
-<p>Day29 完成。明日收官卷：Day30（全系列最后一卷）。</p></details></section><section class="card" id="s148"><details class="sec" open><summary>01-真题考点精讲</summary><h1>Day30 收官卷 · 全系列最后一课：从备考者到持证者</h1>
+<p>Day29 完成。明日收官卷：Day30（全系列最后一卷）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s148"><h1>Day30 收官卷 · 全系列最后一课：从备考者到持证者</h1>
 <blockquote>
 <p>Day30 ｜ 收官卷（不绑定日期）｜ 这是 Day01-Day30 全系列的最后一卷——约 2400 道题、150 个文件之后，用一份"回归本质"的卷子收尾</p>
 </blockquote>
@@ -29441,7 +29435,7 @@ A集团并购B公司后IT整合面临：①两套ERP（品牌不同、主数据�
 <li>[ ] 收官卷得分：____/75（目标 70+，这是 2250 题训练应达到的稳态）</li>
 <li>[ ] 错题本最终清点：仍无法"变会"的题 ≤5 道</li>
 <li>[ ] 给自己的 30 天写一段复盘（三句话：学到什么/不足什么/下一步什么）</li>
-</ul></details></section><section class="card" id="s149"><details class="sec" open><summary>02-模拟卷-综合知识-试题</summary><h1>Day30 收官卷 · 科目一：综合知识（试题）</h1>
+</ul><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s149"><h1>Day30 收官卷 · 科目一：综合知识（试题）</h1>
 <blockquote>
 <p>Day30 ｜ 全系列收官卷 ｜ 75题，限时150分钟 ｜ "最小闭包"考点全覆盖</p>
 </blockquote>
@@ -29822,7 +29816,7 @@ B. 约14.3%
 C. 12%
 D. 10%</p>
 <hr />
-<p>（试题完 ｜ 最后一套，请像第一天一样认真对答案）</p></details></section><section class="card" id="s150"><details class="sec" open><summary>03-模拟卷-综合知识-答案与解析</summary><h1>Day30 收官卷 · 综合知识（答案与解析）</h1>
+<p>（试题完 ｜ 最后一套，请像第一天一样认真对答案）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s150"><h1>Day30 收官卷 · 综合知识（答案与解析）</h1>
 <blockquote>
 <p>Day30 ｜ 收官目标 70+——这 75 题就是"全书最小闭包"，错任何一题都值得回到源头</p>
 </blockquote>
@@ -30070,7 +30064,7 @@ D. 10%</p>
 <p><strong>Day01 → Day30</strong>：30 天，150 个文件，2250 道综合知识、90 道案例大题、60 个论文主题。</p>
 <p>这不是题海，是一座由<strong>考点→速记→变形→网络</strong>搭建的知识金字塔。当你能对这 75 题的每一题说出"为什么"，你已经具备了系统规划与管理师要求的知识全景。</p>
 <p>剩下的，交给考场上的三个小时——和过去 30 天的你。</p>
-<p><strong>祝一次通过。</strong></p></details></section><section class="card" id="s151"><details class="sec" open><summary>04-模拟卷-案例分析-试题与参考答案</summary><h1>Day30 收官卷 · 科目二：案例分析（试题与参考答案）</h1>
+<p><strong>祝一次通过。</strong></p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s151"><h1>Day30 收官卷 · 科目二：案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>Day30 ｜ 共3题，每题25分，限时90分钟 ｜ 收官三题覆盖"服务-技术-管理"三大命题面的最典型形态</p>
 </blockquote>
@@ -30188,7 +30182,7 @@ D. 10%</p>
 </tbody>
 </table></div>
 <p><strong>最后一问留给你</strong>：三题的共同答案骨架是什么？——<strong>"判断（对/错/什么问题）→ 定位（哪个知识域）→ 机制（怎么治理）→ 落地（具体措施）"</strong>。掌握了这个骨架，90 道案例题的训练就已内化为你的解题直觉。</p>
-<p>30 天，完结。去考试吧。</p></details></section><section class="card" id="s152"><details class="sec" open><summary>05-模拟卷-论文-题目与写作指导</summary><h1>Day30 收官卷 · 科目三：论文（题目与写作指导·终章）</h1>
+<p>30 天，完结。去考试吧。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s152"><h1>Day30 收官卷 · 科目三：论文（题目与写作指导·终章）</h1>
 <blockquote>
 <p>Day30 ｜ 2题选1 ｜ 全系列最后一课：两道"集大成"主题——检验你能否用 30 天所学写出一篇真正的系统规划与管理师水平的论文</p>
 </blockquote>
@@ -30293,7 +30287,7 @@ IT 服务的最终目的是为组织创造价值。从价值定义、价值交�
 2. <strong>45 分及格，不是 75 分</strong>——把会的做稳，就是通过；
 3. <strong>做完比做好重要</strong>——案例绝不空题、论文必须写满。</p>
 <p>去吧。<strong>一次通过，副高到手。</strong></p>
-<p>—— 你的备考体系，Day30 完</p></details></section><section class="card" id="s153"><details class="sec" open><summary>考前真题预测·使用说明</summary><h1>考前真题预测 · 使用说明</h1>
+<p>—— 你的备考体系，Day30 完</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s153"><h1>考前真题预测 · 使用说明</h1>
 <blockquote>
 <p>本文件夹为 2026 下半年考试的<strong>最后时刻预测卷</strong>，两套均按 2025 年真题（第2版教程首考）的题型结构与考点分布仿真命制，附 2026 命题趋势权重调整。</p>
 </blockquote>
@@ -30344,7 +30338,7 @@ IT 服务的最终目的是为组织创造价值。从价值定义、价值交�
 </ul>
 <blockquote>
 <p>全部题目按《系统规划与管理师教程（第2版）》知识体系仿真命制，不冒充真题原文。</p>
-</blockquote></details></section><section class="card" id="s154"><details class="sec" open><summary>预测卷一·01-综合知识-试题</summary><h1>预测卷一 · 综合知识（试题）</h1>
+</blockquote><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s154"><h1>预测卷一 · 综合知识（试题）</h1>
 <blockquote>
 <p>对标 2025 真题章节分布：24 章全覆盖（每章 2-5 题）＋专业英语 5 题 ｜ 75 道单项选择题</p>
 </blockquote>
@@ -30723,7 +30717,7 @@ D. on-demand self-service</p>
 A. Repair
 B. Request
 C. Report
-D. Review</p></details></section><section class="card" id="s155"><details class="sec" open><summary>预测卷一·02-综合知识-答案与解析</summary><h1>预测卷一 · 综合知识（答案与解析）</h1>
+D. Review</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s155"><h1>预测卷一 · 综合知识（答案与解析）</h1>
 <h2>一、答案速查表</h2>
 <div class="tw"><table>
 <thead>
@@ -30941,7 +30935,7 @@ D. Review</p></details></section><section class="card" id="s155"><details class=
 <h2>三、考前 30 分钟抢分卡</h2>
 <p><strong>必背数字</strong>：等保三级＝<strong>每年</strong>测评一次｜99.9% 可用率＝年停机 <strong>525.6 分钟（8.76h）</strong>｜变更五步：申请→评估→审批→实施→验证关闭｜ITSS 四要素＝<strong>人员/资源/技术/过程</strong>｜服务生命周期五阶段：规划设计→部署实施→服务运营→持续改进→监督管理。</p>
 <p><strong>易混三连</strong>：①事件管理（快恢复）vs 问题管理（除根因）②发布（变更投放）vs 部署（软硬件分发安装）③业务数字化（改造流程）vs 数字业务化（孵化新业务）。</p>
-<p><strong>2025 真题考点已在卷内变形复刻</strong>：信息安全规划评审（Q26）、IT 审计充分性（Q34）、裸金属（Q16）、诺兰（Q2）、Zachman（Q11）、法规层级（Q67）、容量计算（Q19）、可用性（Q52）——这 8 题等于真题再现，务必全对。</p></details></section><section class="card" id="s156"><details class="sec" open><summary>预测卷一·03-案例分析-试题与参考答案</summary><h1>预测卷一 · 案例分析（试题与参考答案）</h1>
+<p><strong>2025 真题考点已在卷内变形复刻</strong>：信息安全规划评审（Q26）、IT 审计充分性（Q34）、裸金属（Q16）、诺兰（Q2）、Zachman（Q11）、法规层级（Q67）、容量计算（Q19）、可用性（Q52）——这 8 题等于真题再现，务必全对。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s156"><h1>预测卷一 · 案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>3 道大题，每题 25 分，共 75 分 ｜ 建议每题 25 分钟</p>
 </blockquote>
@@ -31005,7 +30999,7 @@ D. Review</p></details></section><section class="card" id="s155"><details class=
 - 资源：升级监控与工单系统（自动派单/升级提醒），配备备件池；
 - 技术：完善应急预案与知识库（典型故障快速诊断手册）；
 - 过程：优化事件分级与升级流程（15 分钟未响应自动升级值班经理），强化 SLA 考核挂钩。</p>
-<p><strong>问题 4（6 分）</strong>：测量/监督方式（任 3 种 3 分）：定期服务报告与 SLA 达成度统计、客户满意度调查、日常巡检与工单审计、第三方测评/管理评审、神秘客户抽查；闭环（3 分）：以测量数据识别偏差（如响应时长趋势异常）→ 输出改进项并指定责任人与期限（PDCA 的 P/D）→ 复测验证改进效果并纳入下一期考核（C/A），形成"测量—分析—改进—验证"持续循环（答出 PDCA 逻辑即给分）。</p></details></section><section class="card" id="s157"><details class="sec" open><summary>预测卷一·04-论文-题目与范文</summary><h1>预测卷一 · 论文（题目与范文）</h1>
+<p><strong>问题 4（6 分）</strong>：测量/监督方式（任 3 种 3 分）：定期服务报告与 SLA 达成度统计、客户满意度调查、日常巡检与工单审计、第三方测评/管理评审、神秘客户抽查；闭环（3 分）：以测量数据识别偏差（如响应时长趋势异常）→ 输出改进项并指定责任人与期限（PDCA 的 P/D）→ 复测验证改进效果并纳入下一期考核（C/A），形成"测量—分析—改进—验证"持续循环（答出 PDCA 逻辑即给分）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s157"><h1>预测卷一 · 论文（题目与范文）</h1>
 <blockquote>
 <p>2 题选 1，2500 字左右（摘要 300＋正文 2200），120 分钟</p>
 </blockquote>
@@ -31051,7 +31045,7 @@ D. Review</p></details></section><section class="card" id="s155"><details class=
 <li><strong>扣题要狠</strong>：题干每个小问都必须在正文有对应段落，宁可通过显式小标题呼应；</li>
 <li><strong>不足要真</strong>：写一个真实可信的小缺陷＋改进方向，比"完美主义"更显真诚；</li>
 <li><strong>时间分配</strong>：读题选题 10 分钟→提纲 20 分钟→写作 80 分钟→检查 10 分钟；选素材最熟的题，不选"看起来好写"的题。</li>
-</ol></details></section><section class="card" id="s158"><details class="sec" open><summary>预测卷二·01-综合知识-试题</summary><h1>预测卷二 · 综合知识（试题）</h1>
+</ol><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s158"><h1>预测卷二 · 综合知识（试题）</h1>
 <blockquote>
 <p>对标 2026 命题趋势：新增章节加重（云资源/数据资源/云原生/数字化转型）＋场景化判断＋计算强化 ｜ 75 道单项选择题</p>
 </blockquote>
@@ -31430,7 +31424,7 @@ D. 定期回顾修订指标</p>
 A. 等媒体曝光后再处理
 B. 仅内部备案即可
 C. 删除全部业务系统
-D. 立即采取补救措施并通知履行个人信息保护职责的部门和个人（可采取措施有效避免危害的可不通知个人）</p></details></section><section class="card" id="s159"><details class="sec" open><summary>预测卷二·02-综合知识-答案与解析</summary><h1>预测卷二 · 综合知识（答案与解析）</h1>
+D. 立即采取补救措施并通知履行个人信息保护职责的部门和个人（可采取措施有效避免危害的可不通知个人）</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s159"><h1>预测卷二 · 综合知识（答案与解析）</h1>
 <h2>一、答案速查表</h2>
 <p>| 1 | B | D | A | C | A |
 | 2 | B | B | B | B | B |
@@ -31533,7 +31527,7 @@ D. 立即采取补救措施并通知履行个人信息保护职责的部门和�
 - EMV 决策：<strong>概率×损失</strong>算期望，措施后期望减少量＞投入即值得（卷二 Q38）；
 - 等保三级＝<strong>每年</strong>测评；GB/T＝<strong>推荐性</strong>国标。</p>
 <p><strong>场景判断口诀</strong>：事件快恢复、问题除根因｜请求是常规、事件是故障｜变更五步走、灰度控半径｜SST 对战略、BSP 梳过程、CSF 抓关键。</p>
-<p><strong>2026 新增考点押题命中区</strong>：数据资产入表（Q4）、数字鸿沟（Q58）、工业互联网平台（Q59）、直播电商供应链（Q62）、服务网格 Sidecar（Q28）、技术雷达（Q46）、个保法泄露处置（Q75）——新增章节的代表性考点已全部覆盖。</p></details></section><section class="card" id="s160"><details class="sec" open><summary>预测卷二·03-案例分析-试题与参考答案</summary><h1>预测卷二 · 案例分析（试题与参考答案）</h1>
+<p><strong>2026 新增考点押题命中区</strong>：数据资产入表（Q4）、数字鸿沟（Q58）、工业互联网平台（Q59）、直播电商供应链（Q62）、服务网格 Sidecar（Q28）、技术雷达（Q46）、个保法泄露处置（Q75）——新增章节的代表性考点已全部覆盖。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s160"><h1>预测卷二 · 案例分析（试题与参考答案）</h1>
 <blockquote>
 <p>3 道大题，每题 25 分，共 75 分 ｜ 侧重 2026 趋势：转型规划场景＋服务计算＋安全监督</p>
 </blockquote>
@@ -31581,7 +31575,7 @@ D. 立即采取补救措施并通知履行个人信息保护职责的部门和�
 ③生产数据直接导入测试环境→数据脱敏后才能用于测试（禁止生产明文数据出生产环境）；
 ④外包权限过大→外包人员权限最小化＋权限定期复核＋重要操作双人复核＋保密协议与行为审计。</p>
 <p><strong>问题 2（9 分）</strong>：信息安全规划主要内容（约 5×1.4 分，答 4 项给满分）：①安全需求分析与定级；②安全体系架构设计（一个中心三重防护：安全管理中心＋安全计算环境/区域边界/通信网络）；③安全技术方案（物理/网络/主机/应用/数据分层防护）；④安全管理方案（制度、机构与人员、建设与运维管理）；⑤实施规划与应急响应/灾备计划。定级与理由（2 分）：面向 3000 万居民的基础民生服务，一旦遭到破坏将严重危害社会秩序与公共利益→应定为<strong>等保三级</strong>（重要的非涉及国计民生核心的系统一般定二级，破坏会严重危害社会秩序公共利益的服务平台定三级——按"严重危害"判）。</p>
-<p><strong>问题 3（8 分）</strong>：监督验收方式（4×1.5 分）：①定期服务报告审查与 SLA 达成度统计（月度/季度例会）；②满意度调查与用户投诉分析；③日常检查与工单/日志审计（含安全管理专项检查）；④阶段评审与里程碑验收（关键节点正式评审）；⑤第三方测评（等保测评、渗透测试）；⑥管理评审与年度审计。问题闭环（2 分）：监督发现问题→登记问题清单（责任人与期限）→服务商整改→复查验证→关闭并纳入考核与持续改进（PDCA 闭环；重大问题启动升级机制与违约处理）。</p></details></section><section class="card" id="s161"><details class="sec" open><summary>预测卷二·04-论文-题目与范文</summary><h1>预测卷二 · 论文（题目与范文）</h1>
+<p><strong>问题 3（8 分）</strong>：监督验收方式（4×1.5 分）：①定期服务报告审查与 SLA 达成度统计（月度/季度例会）；②满意度调查与用户投诉分析；③日常检查与工单/日志审计（含安全管理专项检查）；④阶段评审与里程碑验收（关键节点正式评审）；⑤第三方测评（等保测评、渗透测试）；⑥管理评审与年度审计。问题闭环（2 分）：监督发现问题→登记问题清单（责任人与期限）→服务商整改→复查验证→关闭并纳入考核与持续改进（PDCA 闭环；重大问题启动升级机制与违约处理）。</p><a class="gotop" href="#top">↑ 返回顶部</a></section><section class="card" id="s161"><h1>预测卷二 · 论文（题目与范文）</h1>
 <blockquote>
 <p>2 题选 1，2500 字左右（摘要 300＋正文 2200），120 分钟 ｜ 2026 押题方向：数字化转型规划＋IT 治理</p>
 </blockquote>
@@ -31659,12 +31653,6 @@ D. 立即采取补救措施并通知履行个人信息保护职责的部门和�
 </tr>
 </tbody>
 </table></div>
-<p><strong>万能迁移提醒</strong>：任一论文题都可套用"背景（行业＋规模＋SLA/目标数字）→三论点（对题干小问逐一展开、每段带量化）→典型问题（一个真实困难＋解决）→不足与体会"四段式；素材可从你做过的 30 天卷范文（如集团数据中心运维 850 万素材包、制造/银行/政务背景）中迁移。<strong>数字与真实感是论文的生命线。</strong></p></details></section>
+<p><strong>万能迁移提醒</strong>：任一论文题都可套用"背景（行业＋规模＋SLA/目标数字）→三论点（对题干小问逐一展开、每段带量化）→典型问题（一个真实困难＋解决）→不足与体会"四段式；素材可从你做过的 30 天卷范文（如集团数据中心运维 850 万素材包、制造/银行/政务背景）中迁移。<strong>数字与真实感是论文的生命线。</strong></p><a class="gotop" href="#top">↑ 返回顶部</a></section>
 </div>
-<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<script>
-function tg(){document.getElementById('drawer').classList.toggle('open');document.getElementById('mask').classList.toggle('show')}
-function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});tg()}
-window.addEventListener('hashchange',()=>{const e=document.getElementById(location.hash.slice(1));if(e)e.scrollIntoView()});
-</script>
 </body></html>
